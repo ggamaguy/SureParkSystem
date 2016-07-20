@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- <mapper namespace="RTBookmarkFacade">
+	<insert id="setBookmark" parameterType="cse.ddd.miniproject1.domain.RTBookmark">
+		insert into 
+			tb_bookmark (  
+				user_id,
+				rt_id       
+        	) 
+    	values (
+    		#{user_id},
+			#{rt_id}
+		)       
+	</insert> 
+  
+	<delete id="deleteBookmark" parameterType="cse.ddd.miniproject1.domain.RTBookmark">     
+		delete from 
+			tb_bookmark 
+		where 	
+			rt_id = #{rt_id}
+		and
+			user_id = #{user_id}
+	</delete>
+  
+	<select id="getBookmark"  resultType="cse.ddd.miniproject1.domain.RTBookmark">
+		select
+			bookmark_seq,
+			user_id,
+			rt_id
+		from
+			tb_bookmark
+		where
+			user_id = #{user_id}
+	</select>
+</mapper> -->
