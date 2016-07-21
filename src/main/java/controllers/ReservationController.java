@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import domains.ReservationModel;
-import interfaces.IRReservation;
+import interfaces.ReservationInterface;
 
 @RestController
 public class ReservationController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     private ReservationModel reservationModel;
     @Autowired
-    private IRReservation reservationFacade;
+    private ReservationInterface reservationFacade;
     
     public ReservationController() {
         super();

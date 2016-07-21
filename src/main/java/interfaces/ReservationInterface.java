@@ -2,7 +2,7 @@ package interfaces;
 
 import domains.ReservationModel;
 
-public interface IRReservation {
+public interface ReservationInterface {
 
 	public void insertResv(ReservationModel rm);
 	public void updateResv(ReservationModel rm);

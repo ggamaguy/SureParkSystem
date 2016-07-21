@@ -5,10 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import domains.ReservationModel;
-import interfaces.IRReservation;
+import interfaces.ReservationInterface;
 
 @Service
-public class ReservationFacade implements IRReservation{
+public class ReservationFacade implements ReservationInterface{
 
 	@Autowired
 	SqlSession sqlSession;
