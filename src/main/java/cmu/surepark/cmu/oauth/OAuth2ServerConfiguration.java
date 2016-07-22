@@ -18,6 +18,12 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
+import com.surepark.cmu.service.CustomUserDetailsService;
+import com.surepark.cmu.service.CustomUserDriverDetailsService;
+
+
+
+
 
 @Configuration
 public class OAuth2ServerConfiguration {
@@ -61,7 +67,9 @@ public class OAuth2ServerConfiguration {
 		@Autowired
 		@Qualifier("authenticationManagerBean")
 		private AuthenticationManager authenticationManager;
-
+		
+		@Autowired
+		private CustomUserDriverDetailsService userDriverDetailsService;
 
 		@Override
 		public void configure(AuthorizationServerEndpointsConfigurer endpoints)
@@ -69,14 +77,15 @@ public class OAuth2ServerConfiguration {
 			// @formatter:off
 			endpoints
 				.tokenStore(this.tokenStore)
-				.authenticationManager(this.authenticationManager);
+				.authenticationManager(this.authenticationManager)
+				.userDetailsService(userDriverDetailsService);
 			// @formatter:on
 		}
 
 		@Override
 		public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 			// @formatter:off
-			/*
+			
 			clients
 				.inMemory()
 					.withClient("clientapp")
@@ -85,7 +94,7 @@ public class OAuth2ServerConfiguration {
 						.scopes("read", "write")
 						.resourceIds(RESOURCE_ID)
 						.secret("123456");
-			*/
+			
 			// @formatter:on
 		}
 

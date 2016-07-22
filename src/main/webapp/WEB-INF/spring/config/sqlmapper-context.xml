@@ -7,10 +7,12 @@
  
     <bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource" />
-        <property name="mapperLocations" value="/cmu/src/main/resources/com/surepark/cmu/facades/*Mapper.xml" />
+        <property name="mapperLocations" value="/WEB-INF/spring/mybatis/*Mapper.xml" />
     </bean>
      
     <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
         <constructor-arg index="0" ref="sqlSession"/>
     </bean>  
+    
+    
 </beans>

@@ -4,12 +4,25 @@ package com.surepark.cmu.domains;
 public class UserDriverModel {
 	
 	private String phoneNumber;
-	private String identificatioNumber;
+	private String identificationNumber;
 	
-	public UserDriverModel(String phoneNumber, String identificatioNumber)
+	public UserDriverModel()
 	{
+		
+	}
+	
+	public UserDriverModel(String phoneNumber, String identificationNumber)
+	{
+		
 		this.phoneNumber = phoneNumber;
-		this.identificatioNumber = identificatioNumber;
+		this.identificationNumber = identificationNumber;
+	}
+	
+	public UserDriverModel(UserDriverModel userDriver)
+	{
+		super();
+		this.phoneNumber = userDriver.getPhoneNumber();
+		this.identificationNumber = userDriver.getIdentificationNumber();
 	}
 
 	public String getPhoneNumber() {
@@ -20,12 +33,12 @@ public class UserDriverModel {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public String getIdentificatioNumber() {
-		return identificatioNumber;
+	public String getIdentificationNumber() {
+		return identificationNumber;
 	}
 
-	public void setIdentificatioNumber(String identificatioNumber) {
-		this.identificatioNumber = identificatioNumber;
+	public void setIdentificationNumber(String identificationNumber) {
+		this.identificationNumber = identificationNumber;
 	}
 	
 	

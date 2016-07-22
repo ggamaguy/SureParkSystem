@@ -8,7 +8,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-import com.surepark.cmu.service.CustomUserDetailsService;
+import com.surepark.cmu.facades.UserFacade;
+import com.surepark.cmu.service.CustomUserDriverDetailsService;
 
 
 @Configuration
@@ -16,11 +17,11 @@ import com.surepark.cmu.service.CustomUserDetailsService;
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 
 	@Autowired
-	private CustomUserDetailsService userDetailsService;
+	private CustomUserDriverDetailsService userDriverDetailsService;
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		 auth.userDetailsService(userDetailsService);
+		 auth.userDetailsService(userDriverDetailsService);
 	}
 
 	@Override

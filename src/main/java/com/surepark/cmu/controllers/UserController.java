@@ -36,8 +36,10 @@ public class UserController extends HttpServlet {
     public boolean RegisterUser(@RequestBody JSONObject jsonO ){
     	
     	String phoneNumber = "";
+    	System.out.println(jsonO.toJSONString());
     	if(jsonO.containsKey("user_phoneNumber"))
     	{
+    		
     		phoneNumber = jsonO.get("user_phoneNumber").toString();
     	}
     	
