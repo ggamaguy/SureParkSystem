@@ -24,6 +24,15 @@
 		where
 			phoneNumber = #{phoneNumber} and identificationNumber = #{identificationNumber}
 	</select> 
+	<select id="findUserDriver"  resultType="com.surepark.cmu.domains.UserDriverModel">
+		select
+			phoneNumber,
+			identificationNumber
+		from
+			user
+		where
+			phoneNumber = #{phoneNumber}
+	</select> 
   
 
 </mapper>

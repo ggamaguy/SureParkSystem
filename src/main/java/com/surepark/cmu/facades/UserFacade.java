@@ -39,5 +39,18 @@ public class UserFacade implements UserInterface{
 		return user;
 	}
 
+	@Override
+	public UserDriverModel findUserDriver(String phoneNumber) throws DataAccessException {
+		// TODO Auto-generated method stub
+		UserDriverModel user = null;
+		user = sqlSession.selectOne("UserFacade.findUserDriver", phoneNumber);
+		if (user == null) {
+			throw new UsernameNotFoundException(String.format("User %s does not exist!", phoneNumber));
+		}
+		
+		
+		return user;
+	}
+
 
 }

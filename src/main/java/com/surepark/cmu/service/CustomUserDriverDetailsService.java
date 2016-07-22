@@ -7,23 +7,24 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import com.surepark.cmu.domains.UserDriverModel;
 import com.surepark.cmu.facades.UserFacade;
 
 
 
-
+@Service
 public class CustomUserDriverDetailsService implements UserDetailsService{
 
 	@Autowired
 	private UserFacade userFacade;
 	
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		UserDriverModel userDriver = userFacade.loginUserDriver(userDriver);
+	public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
+		UserDriverModel userDriver = userFacade.findUserDriver(phoneNumber);
 		if (userDriver == null) {
-			throw new UsernameNotFoundException(String.format("User %s does not exist!", username));
+			throw new UsernameNotFoundException(String.format("User %s does not exist!", phoneNumber));
 		}
 		return new UserFacadeUserDetails(userDriver);
 	}
@@ -45,7 +46,7 @@ public class CustomUserDriverDetailsService implements UserDetailsService{
 		@Override
 		public String getPassword() {
 			// TODO Auto-generated method stub
-			return null;
+			return getIdentificationNumber();
 		}
 
 		@Override

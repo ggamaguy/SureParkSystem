@@ -18,8 +18,9 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
-import com.surepark.cmu.service.CustomUserDetailsService;
 import com.surepark.cmu.service.CustomUserDriverDetailsService;
+
+
 
 
 
@@ -46,12 +47,11 @@ public class OAuth2ServerConfiguration {
 		@Override
 		public void configure(HttpSecurity http) throws Exception {
 			// @formatter:off
-			/*
+			
 			http
 				.authorizeRequests()
-					.antMatchers("/users").hasRole("ADMIN")
-					.antMatchers("/greeting").authenticated();
-			*/
+					.antMatchers("/cmu/users").authenticated();
+			
 			// @formatter:on
 		}
 
@@ -88,7 +88,7 @@ public class OAuth2ServerConfiguration {
 			
 			clients
 				.inMemory()
-					.withClient("clientapp")
+					.withClient("user_driver")
 						.authorizedGrantTypes("password", "refresh_token")
 						.authorities("USER")
 						.scopes("read", "write")

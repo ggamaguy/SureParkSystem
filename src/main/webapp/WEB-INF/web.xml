@@ -12,6 +12,7 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+	
 	<filter>
         <filter-name>encodingFilter</filter-name>
         <filter-class>
@@ -26,6 +27,22 @@
 	        <filter-name>encodingFilter</filter-name>
 	        <url-pattern>/*</url-pattern>
 	</filter-mapping>
+
+<filter>
+<filter-name>springSecurityFilterChain</filter-name>
+<filter-class>org.springframework.web.filter.DelegatingFil terProxy</filter-class>
+<init-param>
+<param-name>contextAttribute</param-name>
+<param-value>org.springframework.web.servlet.FrameworkSer vlet.CONTEXT.spring</param-value>
+</init-param>
+</filter>
+
+
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+<url-pattern>/*</url-pattern>
+</filter-mapping>
+
 
 	<!-- Processes application requests -->
 	<servlet>
