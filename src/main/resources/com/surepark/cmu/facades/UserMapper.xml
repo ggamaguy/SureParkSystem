@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper namespace="UserFacade">
+	<insert id="registerUserDiver" parameterType="com.surepark.cmu.domains.UserDriverModel">
+		insert into 
+			user (  
+				phoneNumber,
+				identificationNumber       
+        	) 
+    	values (
+    		#{phoneNumber},
+			#{identificationNumber}
+		)       
+	</insert> 
+  
+
+</mapper>
