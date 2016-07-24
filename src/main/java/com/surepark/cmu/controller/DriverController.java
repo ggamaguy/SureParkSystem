@@ -219,10 +219,34 @@ public class DriverController {
     @RequestMapping(value="/drivers/handover/{phoneNumber}", 
     		method = RequestMethod.PUT,
     		consumes="application/json")
-    public boolean HandoverUser(@RequestBody JSONObject jsonO ){
+    public String HandoverUser(@PathVariable(value="phoneNumber") String phoneNumber ,@RequestBody JSONObject jsonO ){
+    	JSONObject jsonroot=new JSONObject();
+    	if(jsonO.containsKey("secondaryPhoneNumber"))
+    	{
+
+        	String secondaryPhoneNumber = jsonO.get("secondaryPhoneNumber").toString();
+        	
+        	try
+        	{
+        		driverFacade.handoverDriver(phoneNumber, secondaryPhoneNumber);
+        		
+        		jsonroot.put("result", "success");
+        		
+        	}catch(DataAccessException e)
+        	{
+        		e.printStackTrace();
+        		jsonroot.put("result", "fail");
+        	}
+        	
+        	
+    		
+    	}else
+    	{
+    		jsonroot.put("result", "fail");
+    	}
     	
     	
-    	return true;
+    	return jsonroot.toJSONString();
     }
     
 

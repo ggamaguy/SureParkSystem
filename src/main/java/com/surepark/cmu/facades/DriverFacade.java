@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.surepark.cmu.domains.DriverModel;
+import com.surepark.cmu.domains.HandoverDriverModel;
 import com.surepark.cmu.domains.UserDriverModel;
 import com.surepark.cmu.interfaces.DriverInterface;
 
@@ -53,6 +54,16 @@ public class DriverFacade implements DriverInterface{
 	public void deleteDriver(String phoneNumber) throws DataAccessException {
 
 		int result = sqlSession.delete("DriverFacade.deleteDriver", phoneNumber);
+
+	}
+
+	@Override
+	public void handoverDriver(String phoneNumber, String secondaryPhoneNumber) throws DataAccessException {
+		// TODO Auto-generated method stub
+		
+		HandoverDriverModel handoverDriver = new HandoverDriverModel(phoneNumber,secondaryPhoneNumber);
+		
+		int result = sqlSession.update("DriverFacade.handoverDriver", handoverDriver);
 
 	}
 	
