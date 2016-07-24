@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 public class ReservationModel {
 
-	private String reservationId;
+	private int reservationId;
 	private String phoneNumber;
 	private String email;
 	private String parkingLotID;
@@ -17,13 +17,11 @@ public class ReservationModel {
     private String cardExpirationYear;
     private String cardValidationCode;
     private String cardHolder;
-    private String reservation;
     
     public ReservationModel(){}
-	public ReservationModel(String reservationId, String phoneNumber, String email, String parkingLotID, int carSize,
+	public ReservationModel(int reservationId, String phoneNumber, String email, String parkingLotID, int carSize,
 			Timestamp reservationTime, Timestamp entranceTime, Timestamp exitTime, String cardNumber,
-			String cardExpirationMonth, String cardExpirationYear, String cardValidationCode, String cardHolder,
-			String reservation) {
+			String cardExpirationMonth, String cardExpirationYear, String cardValidationCode, String cardHolder) {
 		super();
 		this.reservationId = reservationId;
 		this.phoneNumber = phoneNumber;
@@ -38,12 +36,12 @@ public class ReservationModel {
 		this.cardExpirationYear = cardExpirationYear;
 		this.cardValidationCode = cardValidationCode;
 		this.cardHolder = cardHolder;
-		this.reservation = reservation;
+		
 	}
-	public String getReservationId() {
+	public int getReservationId() {
 		return reservationId;
 	}
-	public void setReservationId(String reservationId) {
+	public void setReservationId(int reservationId) {
 		this.reservationId = reservationId;
 	}
 	public String getPhoneNumber() {
@@ -91,12 +89,6 @@ public class ReservationModel {
 	}
 	public void setCardHolder(String cardHolder) {
 		this.cardHolder = cardHolder;
-	}
-	public String getReservation() {
-		return reservation;
-	}
-	public void setReservation(String reservation) {
-		this.reservation = reservation;
 	}
 	public void setCarSize(int carSize) {
 		this.carSize = carSize;

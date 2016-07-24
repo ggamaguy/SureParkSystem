@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ReservationFacade">
+	<insert id="makeReservation" parameterType="com.surepark.cmu.domains.ReservationModel">
+		insert into
+		reservation (
+		reservationID,
+		phoneNumber,
+		email,
+		parkingLotID,
+		carSize,
+		reservationTime,
+		entranceTime,
+		exitTime,
+		cardNumber,
+		cardExpirationMonth,
+		cardExpirationYear,
+		cardValidationCode,
+		cardHolder
+		)
+		values (
+		#{reservationId},
+		#{phoneNumber},
+		#{email},
+		#{parkingLotID},
+		#{carSize},
+		#{reservationTime},
+		#{entranceTime},
+		#{exitTime},
+		#{cardNumber},
+		#{cardExpirationMonth},
+		#{cardExpirationYear},
+		#{cardValidationCode},
+		#{cardHolder}
+		)
+
+	</insert>
+
+	<select id="getReservationId" resultType="String">
+		select
+		reservationId
+		from
+		reservation
+		where
+		phoneNumber = #{phoneNumber}
+	</select>
+
+	<select id="getReservation" resultType="com.surepark.cmu.domains.ReservationModel">
+		select
+			reservationID,
+			phoneNumber,
+   			email,
+   			parkingLotID,
+   			carSize,
+   			reservationTime,
+   			entranceTime,
+   			exitTime	
+		from
+			reservation
+		where
+			reservationID = #{reservationId}
+	</select>
+
+	<delete id="deleteReservation" parameterType="String">
+		delete from
+			reservation
+		where
+			reservationId = #{reservationId}
+	</delete>
+
+
+</mapper>
