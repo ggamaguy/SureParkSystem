@@ -70,4 +70,10 @@
 			reservationId = #{reservationId}
 	</delete>
 
+	<delete id="deleteReservationByPhoneNumber" parameterType="String">
+		delete from
+			reservation
+		where
+			phoneNumber = #{phoneNumber}
+	</delete>
 </mapper>

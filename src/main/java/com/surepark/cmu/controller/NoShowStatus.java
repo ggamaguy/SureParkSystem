@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.surepark.cmu.interfaces.CardValidationInterface;
 import com.surepark.cmu.interfaces.DriverInterface;
@@ -20,6 +21,7 @@ import com.surepark.cmu.interfaces.ReservationInterface;
 /**
  * Servlet implementation class NoShowStatus
  */
+@RestController
 public class NoShowStatus extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -37,7 +39,7 @@ public class NoShowStatus extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
     @RequestMapping(value="/noshow/{phoneNumber}", 
-    		method = RequestMethod.POST,
+    		method = RequestMethod.DELETE,
     		consumes="application/json")
     public String deliveredNoshowStatus(@PathVariable(value="phoneNumber") String phoneNumber){
     	JSONObject result = new JSONObject();
