@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 import com.surepark.cmu.facades.UserFacade;
+import com.surepark.cmu.services.CustomDriverDetailsService;
 import com.surepark.cmu.services.CustomUserDriverDetailsService;
 
 
@@ -20,11 +21,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 
 	@Autowired
 	private CustomUserDriverDetailsService userDriverDetailsService;
+	@Autowired
+	private CustomDriverDetailsService driverDetailsService;
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		//System.out.println("??");
 		 auth.userDetailsService(userDriverDetailsService);
+		 auth.userDetailsService(driverDetailsService);
 	}
 	
 	@Override

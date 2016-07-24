@@ -20,6 +20,7 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
+import com.surepark.cmu.services.CustomDriverDetailsService;
 import com.surepark.cmu.services.CustomUserDriverDetailsService;
 
 @Configuration
@@ -45,8 +46,9 @@ public class OAuth2ServerConfiguration {
 			//System.out.println("??");
 			http
 				.authorizeRequests()
-					.antMatchers("/users/{userPhoneNumber}")
-					.authenticated();
+					.antMatchers("/users/{userPhoneNumber}").authenticated()
+					.antMatchers("/drivers/{phoneNumber}").authenticated();
+					
 
 			// @formatter:on
 		}
@@ -55,9 +57,9 @@ public class OAuth2ServerConfiguration {
 
 	@Configuration
 	@EnableAuthorizationServer
-	protected static class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
+	public static class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
-		private TokenStore tokenStore = new InMemoryTokenStore();
+		public static TokenStore tokenStore = new InMemoryTokenStore();
 
 		@Autowired
 		@Qualifier("authenticationManagerBean")
@@ -65,6 +67,9 @@ public class OAuth2ServerConfiguration {
 
 		@Autowired
 		private CustomUserDriverDetailsService userDriverDetailsService;
+		
+		@Autowired
+		private CustomDriverDetailsService driverDetailsService;
 
 		@Override
 		public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
@@ -77,8 +82,10 @@ public class OAuth2ServerConfiguration {
 		public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 			//System.out.println("??");
 			// @formatter:off
+			
 			endpoints.tokenStore(this.tokenStore).authenticationManager(this.authenticationManager)
-					.userDetailsService(userDriverDetailsService);
+					.userDetailsService(userDriverDetailsService)
+					.userDetailsService(driverDetailsService);
 			// @formatter:on
 		}
 

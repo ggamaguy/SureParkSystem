@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DriverFacade">
+	<insert id="registerDiver" parameterType="com.surepark.cmu.domains.DriverModel">
+		insert into 
+			driver (  
+				phoneNumber,
+				identificationNumber,
+				state       
+        	) 
+    	values (
+    		#{phoneNumber},
+			#{identificationNumber},
+			#{state}
+		)       
+	</insert>
+	
+	<select id="loginDriver"  resultType="com.surepark.cmu.domains.DriverModel">
+		select
+			phoneNumber,
+			identificationNumber,
+			state
+		from
+			driver
+		where
+			phoneNumber = #{phoneNumber} and identificationNumber = #{identificationNumber}
+	</select> 
+	<select id="findDriver"  resultType="com.surepark.cmu.domains.DriverModel">
+		select
+			phoneNumber,
+			identificationNumber,
+			state
+		from
+			driver
+		where
+			phoneNumber = #{phoneNumber}
+	</select> 
+	
+	<delete id="deleteDriver" parameterType="com.surepark.cmu.domains.DriverModel">     
+		delete from 
+			driver 
+		where 	
+			phoneNumber = #{phoneNumber}
+	</delete>
+  
+
+</mapper>
