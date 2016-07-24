@@ -5,17 +5,19 @@ public class UserDriverModel {
 	
 	private String phoneNumber;
 	private String identificationNumber;
+	private String role;
 	
 	public UserDriverModel()
 	{
 		
 	}
 	
-	public UserDriverModel(String phoneNumber, String identificationNumber)
+	public UserDriverModel(String phoneNumber, String identificationNumber, String role)
 	{
 		
 		this.phoneNumber = phoneNumber;
 		this.identificationNumber = identificationNumber;
+		this.role = role;
 	}
 	
 	public UserDriverModel(UserDriverModel userDriver)
@@ -40,6 +42,24 @@ public class UserDriverModel {
 	public void setIdentificationNumber(String identificationNumber) {
 		this.identificationNumber = identificationNumber;
 	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return getPhoneNumber() + " : "+getIdentificationNumber()+" " + role;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+	
+	
+	
+	
 	
 	
 	

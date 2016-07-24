@@ -2,6 +2,7 @@ package com.surepark.cmu.facades;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,6 +16,7 @@ import com.surepark.cmu.interfaces.UserInterface;
 public class UserFacade implements UserInterface{
 
 	@Autowired
+	@Qualifier("firstSqlSessionTemplate")
 	SqlSession sqlSession;
 	
 	@Override
@@ -40,14 +42,14 @@ public class UserFacade implements UserInterface{
 	}
 
 	@Override
-	public UserDriverModel findUserDriver(String phoneNumber) throws DataAccessException {
+	public UserDriverModel findUserDriver(String phoneNumber) throws DataAccessException,UsernameNotFoundException {
 		// TODO Auto-generated method stub
 		UserDriverModel user = null;
 		user = sqlSession.selectOne("UserFacade.findUserDriver", phoneNumber);
 		if (user == null) {
 			throw new UsernameNotFoundException(String.format("User %s does not exist!", phoneNumber));
 		}
-		
+		//System.out.println(user.toString());
 		
 		return user;
 	}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserFacade">
+	<insert id="registerUserDiver" parameterType="com.surepark.cmu.domains.UserDriverModel">
+		insert into 
+			user (  
+				phoneNumber,
+				identificationNumber,
+				role       
+        	) 
+    	values (
+    		#{phoneNumber},
+			#{identificationNumber},
+			#{role}
+		)       
+	</insert>
+	
+	<select id="loginUserDriver"  resultType="com.surepark.cmu.domains.UserDriverModel">
+		select
+			phoneNumber,
+			identificationNumber,
+			role
+		from
+			user
+		where
+			phoneNumber = #{phoneNumber} and identificationNumber = #{identificationNumber}
+	</select> 
+	<select id="findUserDriver"  resultType="com.surepark.cmu.domains.UserDriverModel">
+		select
+			phoneNumber,
+			identificationNumber,
+			role
+		from
+			user
+		where
+			phoneNumber = #{phoneNumber}
+	</select> 
+  
+
+</mapper>
