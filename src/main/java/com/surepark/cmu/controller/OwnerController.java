@@ -6,9 +6,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.web.bind.annotation.RestController;
+
 /**
  * Servlet implementation class OwnerController
  */
+@RestController
 public class OwnerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -19,6 +22,13 @@ public class OwnerController extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
+    
+    
+    
+    
+    
+    
+    
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)

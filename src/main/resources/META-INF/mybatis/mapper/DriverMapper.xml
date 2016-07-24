@@ -44,6 +44,16 @@
 		where 	
 			phoneNumber = #{phoneNumber}
 	</delete>
+	
+	<update id="handoverDriver" parameterType="com.surepark.cmu.domains.HandoverDriverModel">
+    	UPDATE driver 
+    	SET 
+    		phoneNumber = #{secondaryPhoneNumber}
+    	WHERE 
+    		phoneNumber = #{phoneNumber}
+    </update>
+	
+	
   
 
 </mapper>

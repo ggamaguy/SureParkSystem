@@ -44,7 +44,7 @@ public abstract class DatabaseConfig {
 
 @Configuration
 @EnableTransactionManagement
-@MapperScan(basePackages = {"com.surepark.cmu.facades"}, sqlSessionFactoryRef = "firstSqlSessionFactory")
+@MapperScan(basePackages = {"com.surepark.cmu.interfaces"}, sqlSessionFactoryRef = "firstSqlSessionFactory")
 class DefaultDatabaseConfig extends DatabaseConfig {
 	
 	@Autowired
