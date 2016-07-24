@@ -49,7 +49,10 @@ public class OAuth2ServerConfiguration {
 					.antMatchers("/users/{userPhoneNumber}").authenticated()
 					.antMatchers("/drivers/{phoneNumber}").authenticated()
 					.antMatchers("/drivers/handover/{phoneNumber}").authenticated()
-					.antMatchers("/cardvalidate").authenticated();
+					.antMatchers("/cardvalidate").authenticated()
+					.antMatchers("/reservations").authenticated()
+					.antMatchers("/reservations/{reservationId}").authenticated()
+					.antMatchers("/noshow/{userPhoneNumber}").authenticated();
 			
 					
 

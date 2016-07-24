@@ -7,6 +7,7 @@ import com.surepark.cmu.domains.CardValidationModel;
 public interface CardValidationInterface {
 
 	
-	void insertValidationCard(CardValidationModel cardValidationModel) throws DataAccessException;
-	CardValidationModel findValidationCard(String cardNumber,String phoneNumber) throws DataAccessException;
+	public void insertValidationCard(CardValidationModel cardValidationModel) throws DataAccessException;
+	public CardValidationModel findValidationCard(String cardNumber,String phoneNumber) throws DataAccessException;
+	public void deleteCardByPhoneNumber(String phoneNumber)throws DataAccessException;
 }

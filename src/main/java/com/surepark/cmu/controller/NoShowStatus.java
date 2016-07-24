@@ -7,11 +7,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.surepark.cmu.interfaces.CardValidationInterface;
+import com.surepark.cmu.interfaces.DriverInterface;
 import com.surepark.cmu.interfaces.ReservationInterface;
 
 /**
@@ -23,7 +26,9 @@ public class NoShowStatus extends HttpServlet {
 	@Autowired
 	ReservationInterface reservationFacade;
 	@Autowired
-	
+	CardValidationInterface cardValidationFacade;
+	@Autowired
+	DriverInterface driverFacade;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -34,9 +39,19 @@ public class NoShowStatus extends HttpServlet {
     @RequestMapping(value="/noshow/{phoneNumber}", 
     		method = RequestMethod.POST,
     		consumes="application/json")
-    public String deliveredNoshowStatus(@PathVariable(value="phoneNumber") String reservationId){
-    	
-    	return null;
+    public String deliveredNoshowStatus(@PathVariable(value="phoneNumber") String phoneNumber){
+    	JSONObject result = new JSONObject();
+    	try{
+    		reservationFacade.deleteResvByPhoneNumber(phoneNumber);
+    		cardValidationFacade.deleteCardByPhoneNumber(phoneNumber);
+    		driverFacade.deleteDriver(phoneNumber);
+    	}catch(Exception e){
+    		e.printStackTrace();
+    		result.put("result", "fail");
+    		return result.toJSONString();
+    	}
+    	result.put("result", "success");
+    	return result.toJSONString();
     }
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)

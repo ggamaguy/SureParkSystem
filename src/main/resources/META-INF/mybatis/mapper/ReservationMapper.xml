@@ -70,5 +70,4 @@
 			reservationId = #{reservationId}
 	</delete>
 
-
 </mapper>

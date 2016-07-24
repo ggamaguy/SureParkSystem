@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.surepark.cmu.domains.ReservationModel;
@@ -33,5 +34,10 @@ public class ReservationFacade implements ReservationInterface{
 	@Override
 	public ReservationModel getResv(String reservationId) {
 		return sqlSession.selectOne("ReservationFacade.getReservation", reservationId);
+	}
+
+	@Override
+	public void deleteResvByPhoneNumber(String phoneNumber) throws DataAccessException {
+		this.sqlSession.delete("ReservationFacade.deleteReservationByPhoneNumber",phoneNumber);
 	}
 }
