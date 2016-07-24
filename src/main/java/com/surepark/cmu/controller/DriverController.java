@@ -34,7 +34,7 @@ public class DriverController {
 	
 	private static final long serialVersionUID = 1L;
 
-	private static String secretKey = "surepark";
+	private final String secretKey = "surepark";
 	
 	@Autowired
 	private DriverFacade driverFacade;

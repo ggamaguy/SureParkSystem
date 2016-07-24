@@ -48,7 +48,9 @@ public class OAuth2ServerConfiguration {
 				.authorizeRequests()
 					.antMatchers("/users/{userPhoneNumber}").authenticated()
 					.antMatchers("/drivers/{phoneNumber}").authenticated()
-					.antMatchers("/drivers/handover/{phoneNumber}").authenticated();;
+					.antMatchers("/drivers/handover/{phoneNumber}").authenticated()
+					.antMatchers("/cardvalidate").authenticated();
+			
 					
 
 			// @formatter:on

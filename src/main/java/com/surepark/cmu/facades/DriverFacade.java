@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.surepark.cmu.domains.DriverModel;
 import com.surepark.cmu.domains.HandoverDriverModel;
-import com.surepark.cmu.domains.UserDriverModel;
 import com.surepark.cmu.interfaces.DriverInterface;
 
 @Service
