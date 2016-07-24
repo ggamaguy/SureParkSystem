@@ -35,6 +35,21 @@ public class ReservationController extends HttpServlet {
     		method = RequestMethod.POST,
     		consumes="application/json")
     public boolean makeReservation(@RequestBody JSONObject jsonO ){
+    	if(jsonO.containsKey("phoneNumber")){
+    		
+    	}
+    	return true;
+    }
+    @RequestMapping(value="/Reservation", 
+    		method = RequestMethod.GET,
+    		consumes="application/json")
+    public boolean getReservation(@RequestBody JSONObject jsonO ){
+    	return true;
+    }
+    @RequestMapping(value="/Reservation", 
+    		method = RequestMethod.DELETE,
+    		consumes="application/json")
+    public boolean deleteReservation(@RequestBody JSONObject jsonO ){
     	return true;
     }
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
