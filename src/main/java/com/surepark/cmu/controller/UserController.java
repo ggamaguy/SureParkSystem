@@ -59,7 +59,7 @@ import sun.misc.BASE64Encoder;
 public class UserController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private static String secret_key = "surepark";
+	private final String secret_key = "surepark";
 	
 	@Autowired
 	private UserFacade userFacade;
