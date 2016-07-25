@@ -1,14 +1,23 @@
 package com.surepark.cmu.controller;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONObject;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
 /**
  * Servlet implementation class LocalSurePark
  */
+@RestController
 public class LocalSurePark extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -20,6 +29,21 @@ public class LocalSurePark extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
+    @RequestMapping(value="/sureparks/ping/{parkingLotId}", 
+    		method = RequestMethod.GET)
+    public String localSureParkPingEcho(@PathVariable(value="parkingLotId") String parkingLotId){
+    	JSONObject result = new JSONObject();
+    	result.put("status", "alive");
+    	return result.toJSONString();
+    }
+    @RequestMapping(value="/sureparks/ping/{parkingLotId}", 
+    		method = RequestMethod.PUT,
+    		consumes = "application/json")
+    public String syncWithLocalServer(@RequestBody JSONObject json){
+    	JSONObject result = new JSONObject();
+    	
+    	return result.toJSONString();
+    }
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
