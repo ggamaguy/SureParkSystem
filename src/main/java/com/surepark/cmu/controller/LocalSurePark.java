@@ -46,7 +46,7 @@ public class LocalSurePark extends HttpServlet {
     		consumes = "application/json")
     public String syncWithLocalServer(@RequestBody JSONObject json){
     	JSONObject result = new JSONObject();
-    
+    	//if(json.)
     	return result.toJSONString();
     }
 	/**
