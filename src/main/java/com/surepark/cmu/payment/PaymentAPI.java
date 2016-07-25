@@ -17,6 +17,7 @@ public class PaymentAPI {
 		{
 			//TODO payment API
 			
+			System.out.println("정상 카드 입니다.");
 			result = true;
 		}
 		

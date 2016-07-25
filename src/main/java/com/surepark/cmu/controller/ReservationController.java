@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.surepark.cmu.domains.DriverModel;
 import com.surepark.cmu.domains.ReservationModel;
+import com.surepark.cmu.facades.DriverFacade;
 import com.surepark.cmu.interfaces.ReservationInterface;
 
 @RestController
@@ -28,6 +30,9 @@ public class ReservationController extends HttpServlet {
     
     @Autowired
     private ReservationInterface reservationFacade;
+    
+    @Autowired
+    private DriverFacade driverFacade;
     
     public ReservationController() {
         super();
@@ -61,6 +66,7 @@ public class ReservationController extends HttpServlet {
     		reservationModel.setReservationTime(Timestamp.valueOf(jsonO.get("reservationTime").toString()));
     		System.out.println(jsonO.get("reservationTime").toString());
     	}
+    	/*
     	if(jsonO.containsKey("entranceTime") && jsonO.get("exitTime") != null){
     		reservationModel.setEntranceTime(Timestamp.valueOf(jsonO.get("entranceTime").toString()));
     		System.out.println(Timestamp.valueOf(jsonO.get("entranceTime").toString()));
@@ -69,6 +75,7 @@ public class ReservationController extends HttpServlet {
     		reservationModel.setExitTime(Timestamp.valueOf(jsonO.get("exitTime").toString()));
     		System.out.println(jsonO.get("exitTime").toString());
     	}
+    	*/
     	if(jsonO.containsKey("cardNumber") && jsonO.get("cardNumber") != null){
     		reservationModel.setCardNumber(jsonO.get("cardNumber").toString());
     		System.out.println(jsonO.get("cardNumber").toString());
@@ -92,6 +99,13 @@ public class ReservationController extends HttpServlet {
     	try{
     		reservationFacade.insertResv(reservationModel);
     		reservationId = reservationFacade.getResvId(reservationModel.getPhoneNumber()).get(0);
+    		
+    		try{
+    			driverFacade.updateDriverState(reservationModel.getPhoneNumber(), DriverModel.RESERVED);
+    		}catch(DataAccessException e)
+    		{
+    			e.printStackTrace();
+    		}
     	}catch(Exception e){
     		result.put("result", "fail");
     		result.put("reservationID", null);
@@ -109,14 +123,35 @@ public class ReservationController extends HttpServlet {
     	JSONObject json = new JSONObject();
     	try{
     		reservationModel = reservationFacade.getResv(reservationId);
-    		json.put("reservationID", reservationModel.getReservationId());
-        	json.put("phoneNumber", reservationModel.getPhoneNumber());
-        	json.put("email", reservationModel.getEmail());
-        	json.put("parkingLotID", reservationModel.getParkingLotID());
-        	json.put("carSize", reservationModel.getCarSize());
-        	json.put("reservationTime", reservationModel.getReservationTime());
-        	json.put("entranceTime", reservationModel.getEntranceTime());
-        	json.put("exitTime", reservationModel.getExitTime());
+    		if(reservationModel != null)
+    		{
+    			json.put("reservationID", reservationModel.getReservationId());
+            	json.put("phoneNumber", reservationModel.getPhoneNumber());
+            	json.put("email", reservationModel.getEmail());
+            	json.put("parkingLotID", reservationModel.getParkingLotID());
+            	json.put("carSize", reservationModel.getCarSize());
+            	json.put("reservationTime", reservationModel.getReservationTime().toString());
+            	if(reservationModel.getEntranceTime() ==null)
+            	{
+            		json.put("entranceTime", "null");
+            	}else
+            	{
+            		json.put("entranceTime", reservationModel.getEntranceTime());
+            	}
+            	if(reservationModel.getExitTime() ==null)
+            	{
+            		json.put("exitTime", "null");
+            	}else
+            	{
+            		json.put("exitTime", reservationModel.getExitTime());
+            	}
+            	
+            	System.out.println(json.toJSONString());
+    		}else
+    		{
+    			json.put("result", "fail");
+    		}
+    		
     	}catch(Exception e){
     		e.printStackTrace();
     	}
@@ -129,10 +164,20 @@ public class ReservationController extends HttpServlet {
     
     @RequestMapping(value="/reservations/{reservationId}", 
     		method = RequestMethod.DELETE)
-    public String deleteReservation(@PathVariable(value="reservationId") String reservationId){
+    public String deleteReservation(@PathVariable(value="reservationId") String reservationId,@RequestBody JSONObject jsonO){
     	JSONObject result = new JSONObject();
     	try{
     		reservationFacade.deleteResv(reservationId);
+
+    		if(jsonO.containsKey("phoneNumber"))
+    		{
+    			try{
+    				driverFacade.updateDriverState(jsonO.get("phoneNumber").toString(), DriverModel.UNRESERVED);
+    			}catch(DataAccessException e)
+    			{
+    				e.printStackTrace();
+    			}
+    		}
     	}
     	catch(Exception e){
     		e.printStackTrace();

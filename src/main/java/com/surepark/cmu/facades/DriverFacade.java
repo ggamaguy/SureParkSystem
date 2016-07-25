@@ -1,5 +1,8 @@
 package com.surepark.cmu.facades;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -64,6 +67,18 @@ public class DriverFacade implements DriverInterface{
 		
 		int result = sqlSession.update("DriverFacade.handoverDriver", handoverDriver);
 
+	}
+
+	@Override
+	public void updateDriverState(String phoneNumber, String state) throws DataAccessException {
+		// TODO Auto-generated method stub
+		
+		Map<String, String> map = new HashMap<String, String>();
+        map.put("phoneNumber", phoneNumber);
+        map.put("state", state);
+        
+		int result = sqlSession.update("DriverFacade.updateDriverState", map);
+		
 	}
 	
 	
