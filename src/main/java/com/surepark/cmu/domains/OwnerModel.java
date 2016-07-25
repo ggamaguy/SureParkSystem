@@ -95,6 +95,16 @@ public class OwnerModel {
 	public void setOwnerTwofactorPassword(String ownerTwofactorPassword) {
 		this.ownerTwofactorPassword = ownerTwofactorPassword;
 	}
+
+
+	@Override
+	public String toString() {
+		return "OwnerModel [ownerID=" + ownerID + ", ownerName=" + ownerName + ", ownerPassword=" + ownerPassword
+				+ ", ownerEmail=" + ownerEmail + ", ownerPhoneNumber=" + ownerPhoneNumber + ", ownerTwofactorPassword="
+				+ ownerTwofactorPassword + "]";
+	}
+	
+	
 	
 
 }

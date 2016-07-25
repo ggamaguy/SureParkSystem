@@ -45,6 +45,7 @@ public class CardValidationController extends HttpServlet {
     public String validateCard(@RequestBody JSONObject jsonO)
     {
     	JSONObject jsonroot=new JSONObject();
+    	System.out.println("cardvalidate : "+jsonO.toJSONString());
     	
     	if(jsonO.containsKey("phoneNumber") && jsonO.containsKey("cardNumber") && jsonO.containsKey("cardExpirationMonth") && jsonO.containsKey("cardExpirationYear") && jsonO.containsKey("cardValidationCode") && jsonO.containsKey("cardHolder"))
     	{
@@ -59,7 +60,7 @@ public class CardValidationController extends HttpServlet {
     		
     		CardModel card = new CardModel(phoneNumber, cardNumber, cardExpirationMonth, cardExpirationYear, cardValidationCode, cardHolder);
     		
-    		
+    		System.out.println(card.toString());
     		boolean result = paymentAPI.payment(card , 1);
     		
     		CardValidationModel cardValidationModel = new CardValidationModel();
@@ -87,7 +88,6 @@ public class CardValidationController extends HttpServlet {
     			
     		}else
     		{
-    			
     			jsonroot.put("result", "fail");
     			
     			cardValidationModel.setValidationState(CardValidationModel.INVALID);
@@ -97,7 +97,9 @@ public class CardValidationController extends HttpServlet {
     		
     	}else
     	{
+    		
     		jsonroot.put("result", "fail");
+    		System.out.println("json error"+jsonroot.toJSONString());
     	}
     	
     	return jsonroot.toJSONString();

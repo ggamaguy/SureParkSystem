@@ -3,7 +3,8 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="OwnerFacade">
-   <select id="loginOwner"  resultType="com.surepark.cmu.domains.OwnerModel">
+
+   <select id="loginOwner" parameterType="map" resultType="com.surepark.cmu.domains.OwnerModel">
 		select
 			ownerID,
 			ownerName,
@@ -11,15 +12,49 @@
 			ownerEmail,
 			ownerPhoneNumber,
 			ownerTwofactorPassword
-
 		from
 			owner
 		where
 			ownerID = #{ownerID} and ownerPassword = #{ownerPassword}
 	</select> 
+	
+	
+	
+	<select id="findOwner"  resultType="com.surepark.cmu.domains.OwnerModel">
+		select
+			ownerID,
+			ownerName,
+			ownerPassword,
+			ownerEmail,
+			ownerPhoneNumber,
+			ownerTwofactorPassword
+		from
+			owner
+		where
+			ownerID = #{ownerID}
+	</select> 
   
+  <update id="updateOwnerTwofactor" parameterType="map" >
+    	update owner 
+    	set 
+    		ownerTwofactorPassword = #{ownerTwofactorPassword}
+    	where 
+    		ownerID = #{ownerID}
+    </update>
   
-  
+  <select id="loginOwnerTwoFactor" parameterType="map" resultType="com.surepark.cmu.domains.OwnerModel">
+		select
+			ownerID,
+			ownerName,
+			ownerPassword,
+			ownerEmail,
+			ownerPhoneNumber,
+			ownerTwofactorPassword
+		from
+			owner
+		where
+			ownerID = #{ownerID} and ownerTwofactorPassword = #{ownerTwofactorPassword}
+	</select> 
 
 
 </mapper>

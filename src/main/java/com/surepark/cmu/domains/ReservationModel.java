@@ -117,5 +117,16 @@ public class ReservationModel {
 	public void setCardNumber(String cardNumber) {
 		this.cardNumber = cardNumber;
 	}
+	@Override
+	public String toString() {
+		return "ReservationModel [reservationId=" + reservationId + ", phoneNumber=" + phoneNumber + ", email=" + email
+				+ ", parkingLotID=" + parkingLotID + ", carSize=" + carSize + ", reservationTime=" + reservationTime
+				+ ", entranceTime=" + entranceTime + ", exitTime=" + exitTime + ", cardNumber=" + cardNumber
+				+ ", cardExpirationMonth=" + cardExpirationMonth + ", cardExpirationYear=" + cardExpirationYear
+				+ ", cardValidationCode=" + cardValidationCode + ", cardHolder=" + cardHolder + "]";
+	}
+	
+	
+	
 
 }
