@@ -49,7 +49,8 @@ public class OAuth2ServerConfiguration {
 					.antMatchers("/users/{userPhoneNumber}").authenticated()
 					.antMatchers("/drivers/{phoneNumber}").authenticated()
 					.antMatchers("/drivers/handover/{phoneNumber}").authenticated()
-					.antMatchers("/cardvalidate").authenticated();
+					.antMatchers("/cardvalidate").authenticated()
+					.antMatchers("/owners/login").hasRole("ADMIN");
 			
 					
 
@@ -101,6 +102,13 @@ public class OAuth2ServerConfiguration {
 						.withClient("user_driver")
 								.authorizedGrantTypes("authorization_code","password", "refresh_token")
 								.authorities("USER")
+								.scopes("read", "write")
+								.resourceIds(RESOURCE_ID).secret("123456")
+								.accessTokenValiditySeconds(60 * 60 * 3)
+						.and()
+						.withClient("owner")
+								.authorizedGrantTypes("authorization_code","password", "refresh_token")
+								.authorities("ADMIN")
 								.scopes("read", "write")
 								.resourceIds(RESOURCE_ID).secret("123456")
 								.accessTokenValiditySeconds(60 * 60 * 3);
