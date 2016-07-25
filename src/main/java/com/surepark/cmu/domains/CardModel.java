@@ -72,6 +72,14 @@ public class CardModel {
 	public void setCardHolder(String cardHolder) {
 		this.cardHolder = cardHolder;
 	}
+
+	@Override
+	public String toString() {
+		return "CardModel [phoneNumber=" + phoneNumber + ", cardNumber=" + cardNumber + ", cardExpirationMonth="
+				+ cardExpirationMonth + ", cardExpirationYear=" + cardExpirationYear + ", cardValidationCode="
+				+ cardValidationCode + ", cardHolder=" + cardHolder + "]";
+	}
+	
 	
 	
 	

@@ -94,6 +94,7 @@ public class DriverController {
         		jsonroot.put("driverRegistration", "yes");
         		jsonroot.put("phoneNumber", driver.getPhoneNumber());
         		jsonroot.put("identificationNumber", driver.getIdentificationNumber());
+        		jsonroot.put("state", driver.getState());
         	}
         	
         	/*
@@ -161,10 +162,12 @@ public class DriverController {
     		//System.out.println(userDriver.getIdentificationNumber() + userDriver.getPhoneNumber());
     	
     		jsonroot.put("phoneNumber", driver.getPhoneNumber());
+    		jsonroot.put("state", driver.getState());
     	}catch(DataAccessException e)
     	{
     		e.printStackTrace();
     		jsonroot.put("phoneNumber", "null");
+    		jsonroot.put("state","null");
     	}
     	return jsonroot.toJSONString();
     }

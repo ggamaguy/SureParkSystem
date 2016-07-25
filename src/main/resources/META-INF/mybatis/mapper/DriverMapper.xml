@@ -52,6 +52,14 @@
     	WHERE 
     		phoneNumber = #{phoneNumber}
     </update>
+    
+    <update id="updateDriverState" parameterType="map" >
+    	UPDATE driver 
+    	SET 
+    		state = #{state}
+    	WHERE 
+    		phoneNumber = #{phoneNumber}
+    </update>
 	
 	
   

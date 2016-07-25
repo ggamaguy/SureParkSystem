@@ -31,14 +31,14 @@ public class CustomOwnerDetatilsService implements UserDetailsService{
 			throw new UsernameNotFoundException(String.format("Owner ID %s does not exist!", ownerID));
 		}
 		//System.out.println(userDriver.toString());
-		return new DriverFacadeUserDetails(owner);
+		return new OwnerFacadeUserDetails(owner);
 	}
 	
-	private final static class DriverFacadeUserDetails extends OwnerModel implements UserDetails {
+	private final static class OwnerFacadeUserDetails extends OwnerModel implements UserDetails {
 
 		private static final long serialVersionUID = 1L;
 
-		private DriverFacadeUserDetails(OwnerModel owner) {
+		private OwnerFacadeUserDetails(OwnerModel owner) {
 			super(owner);
 			//System.out.println(userDriver.toString());
 		}
@@ -46,16 +46,14 @@ public class CustomOwnerDetatilsService implements UserDetailsService{
 		@Override
 		public Collection<? extends GrantedAuthority> getAuthorities() {
 			// TODO Auto-generated method stub
-			
-			
-			
+
 			return null;
 		}
 
 		@Override
 		public String getPassword() {
 			// TODO Auto-generated method stub
-			return getPassword();
+			return getOwnerPassword();
 		}
 
 		@Override
