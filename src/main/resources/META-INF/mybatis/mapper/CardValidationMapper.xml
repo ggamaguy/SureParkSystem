@@ -18,6 +18,11 @@
 			#{phoneNumber}
 		)       
 	</insert>
-	
+	<delete id="deleteCardByPhoneNumber" parameterType="String">
+	delete from
+		cardvalidation
+	where
+		phoneNumber = #{phoneNumber}
+	</delete>
 
 </mapper>

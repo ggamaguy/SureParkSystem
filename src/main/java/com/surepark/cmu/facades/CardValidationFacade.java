@@ -44,6 +44,11 @@ public class CardValidationFacade implements CardValidationInterface{
 		return validationCard;
 	}
 
+	@Override
+	public void deleteCardByPhoneNumber(String phoneNumber) throws DataAccessException {
+		sqlSession.delete("CardValidationFacade.deleteCardByPhoneNumber",phoneNumber);
+	}
+
 
 	
 	
