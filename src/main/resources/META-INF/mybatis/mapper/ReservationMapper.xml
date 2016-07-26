@@ -5,42 +5,45 @@
 <mapper namespace="ReservationFacade">
 	<insert id="makeReservation" parameterType="com.surepark.cmu.domains.ReservationModel">
 		insert into
-		reservation (
-		reservationID,
-		phoneNumber,
-		email,
-		parkingLotID,
-		carSize,
-		reservationTime,
-		cardNumber,
-		cardExpirationMonth,
-		cardExpirationYear,
-		cardValidationCode,
-		cardHolder
-		)
-		values (
-		#{reservationId},
-		#{phoneNumber},
-		#{email},
-		#{parkingLotID},
-		#{carSize},
-		#{reservationTime},
-		#{cardNumber},
-		#{cardExpirationMonth},
-		#{cardExpirationYear},
-		#{cardValidationCode},
-		#{cardHolder}
-		)
-
+			reservation (
+				reservationID,
+				phoneNumber,
+				email,
+				parkingLotID,
+				carSize,
+				reservationTime,
+				entranceTime,
+				exitTime,
+				cardNumber,
+				cardExpirationMonth,
+				cardExpirationYear,
+				cardValidationCode,
+				cardHolder
+			)
+			values (
+				#{reservationId},
+				#{phoneNumber},
+				#{email},
+				#{parkingLotID},
+				#{carSize},
+				#{reservationTime},
+				#{entranceTime},
+				#{exitTime},
+				#{cardNumber},
+				#{cardExpirationMonth},
+				#{cardExpirationYear},
+				#{cardValidationCode},
+				#{cardHolder}
+			)
 	</insert>
 
 	<select id="getReservationId" resultType="String">
 		select
-		reservationId
+			reservationId
 		from
-		reservation
+			reservation
 		where
-		phoneNumber = #{phoneNumber}
+			phoneNumber = #{phoneNumber}
 	</select>
 
 	<select id="getReservation" parameterType="map" resultType="com.surepark.cmu.domains.ReservationModel">
@@ -72,4 +75,19 @@
 		where
 			phoneNumber = #{phoneNumber}
 	</delete>
+
+	<update id="updateReservation" parameterType="com.surepark.cmu.domains.ReservationModel">
+	update 
+		reservation
+	set
+		phoneNumber = #{phoneNumber},
+		email = #{email},
+		parkingLotID = #{parkingLotID},
+		carSize = #{carSize},
+		reservationTime = #{reservationTime},
+		entranceTime = #{entranceTime},
+		exitTime = #{exitTime}
+	where
+		reservationId = #{reservationId}
+	</update>
 </mapper>

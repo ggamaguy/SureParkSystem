@@ -48,4 +48,9 @@ public class ReservationFacade implements ReservationInterface{
 	public void deleteResvByPhoneNumber(String phoneNumber) throws DataAccessException {
 		this.sqlSession.delete("ReservationFacade.deleteReservationByPhoneNumber",phoneNumber);
 	}
+
+	@Override
+	public void updateResv(ReservationModel rm) throws DataAccessException {
+		this.sqlSession.update("ReservationFacade.updateReservation", rm);
+	}
 }

@@ -2,9 +2,97 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="ParkigLotFacade">
+<mapper namespace="ParkingLotFacade">
+ 	<update id="updateParkingLot" parameterType="com.surepark.cmu.domains.ParkingLotModel">
+ 	
+ 	</update>
+ 
+ 	<delete id="deleteParkingLotByParkingLotId" parameterType = "String">
+ 		delete from
+ 			parkinglot
+ 		where
+ 			parkinglotID = #{parkingLotID}
+ 	</delete>
+ 
+ 	<insert id="insertParkingLot" parameterType="com.surepark.cmu.domains.ParkingLotModel">
+ 		insert into 
+ 			parkinglot(
+ 				parkingLotID, 
+ 				parkingLotName, 
+ 				parkingLotLocationLongitude,
+ 				parkingLotLocationLatitude, 
+ 				parkingLotAdress, 
+ 				parkingLotStartTime, 
+ 				parkingLotEndTime, 
+ 				parkingLotMaximumCapacity, 
+ 				ownerID, 
+ 				parkingLotGracePeriod, 
+ 				parkingLotPreResvationPeriod
+ 			)
+ 		values (
+ 				#{parkingLotID}, 
+ 				#{parkingLotName}, 
+ 				#{parkingLotLocationLongitude},
+ 				#{parkingLotLocationLatitude}, 
+ 				#{parkingLotAdress}, 
+ 				#{parkingLotStartTime}, 
+ 				#{parkingLotEndTime}, 
+ 				#{parkingLotMaximumCapacity}, 
+ 				#{ownerID}, 
+ 				#{parkingLotGracePeriod}, 
+ 				#{parkingLotPreResvationPeriod} 
+ 			)
+ 			
+ 	</insert>
+ 
+ 	<select id="selectParkingLotsByArea" parameterType = "String" resultType = "com.surepark.cmu.domains.ParkingLotModel">
+ 		select
+			parkingLotID, 
+			parkingLotName, 
+			parkingLotLocationLongitude, 
+			parkingLotLocationLatitude, 
+			parkingLotAdress, 
+			parkingLotStartTime, 
+			parkingLotEndTime, 
+			parkingLotMaximumCapacity, 
+			parkingLotGracePeriod, 
+			parkingLotPreResvationPeriod, 
+			parkingLotID
+ 		from 
+ 			parkingLot
+ 		where
+ 			parkingLotAdress like CONCAT('%',#{cityName},'%') 
+ 	</select>
+ 	
+ 	<select id="selectParkingLotByParkingLotId" parameterType = "String" resultType = "com.surepark.cmu.domains.ParkingLotModel">
+ 		select
+ 			parkingLotID, 
+ 			parkingLotName, 
+ 			parkingLotLocationLongitude,
+ 			parkingLotLocationLatitude, 
+ 			parkingLotAdress, 
+ 			parkingLotStartTime, 
+ 			parkingLotEndTime, 
+ 			parkingLotMaximumCapacity, 
+ 			ownerID, 
+ 			parkingLotGracePeriod, 
+ 			parkingLotPreResvationPeriod
+ 		from 
+ 			parkingLot
+ 		where
+ 			parkingLotAdress like CONCAT('%',#{area},'%') 
+ 	</select>
   
-  
-
+<!-- parkingLotID, 
+parkingLotName, 
+parkingLotLocation, 
+parkingLotAdress, 
+parkingLotStartTime, 
+parkingLotEndTime, 
+parkingLotMaximumCapacity, 
+ownerID, 
+parkingLotGracePeriod, 
+parkingLotPreResvationPeriod, 
+parkingLotID, id -->
 
 </mapper>

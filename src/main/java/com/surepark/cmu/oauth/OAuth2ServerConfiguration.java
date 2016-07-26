@@ -53,10 +53,9 @@ public class OAuth2ServerConfiguration {
 					.antMatchers("/opengate/{phoneNumber}").authenticated()
 					.antMatchers("/reservations").authenticated()
 					.antMatchers("/reservations/{reservationId}").authenticated()
-					.antMatchers("/noshow/{userPhoneNumber}").authenticated();
-			
-					
-
+					.antMatchers("/noshow/{userPhoneNumber}").authenticated()
+					.antMatchers("/sureparks/list/{cityName}").authenticated()
+					.antMatchers("/sureparks/sync/{parkingLotId}").authenticated();
 			// @formatter:on
 		}
 

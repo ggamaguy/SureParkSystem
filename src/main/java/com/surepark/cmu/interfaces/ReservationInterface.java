@@ -13,4 +13,5 @@ public interface ReservationInterface {
 	public void deleteResv(String phoneNumber,String reservationId) throws DataAccessException;	
 	public List<String> getResvId(String phoneNumber) throws DataAccessException;
 	public void deleteResvByPhoneNumber(String phoneNumber) throws DataAccessException;
+	public void updateResv(ReservationModel rm) throws DataAccessException;
 }
