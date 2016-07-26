@@ -24,10 +24,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mongodb.util.JSON;
+import com.surepark.cmu.domains.CustomerMongoModel;
 import com.surepark.cmu.domains.DriverModel;
 import com.surepark.cmu.domains.ReservationModel;
 import com.surepark.cmu.facades.DriverFacade;
 import com.surepark.cmu.interfaces.ReservationInterface;
+import com.surepark.cmu.mongorepository.CustomerMongoRepository;
 
 
 @RestController
@@ -42,7 +44,8 @@ public class ReservationController extends HttpServlet {
     @Autowired
     private DriverFacade driverFacade;
     
-    
+    @Autowired
+	private CustomerMongoRepository customerMongoRepository;
     
     
     public ReservationController() {
@@ -289,15 +292,34 @@ public class ReservationController extends HttpServlet {
 			JSONParser parser = new JSONParser();
 			Object obj = parser.parse(response);
 			JSONObject recvJsonObject = (JSONObject) obj;
+			
+			
+			if(recvJsonObject.containsKey("result") && recvJsonObject.get("result").equals("success"))
+			{
+				try{
+	    			driverFacade.deleteDriver(phoneNumber);
+	    		}catch(DataAccessException e)
+	    		{
+	    			e.printStackTrace();
+	    			result.put("result", "fail");
+		    		
+		    		return result.toJSONString();
+	    		}
+			}else
+			{
+				result.put("result", "fail");
+	    		
+	    		return result.toJSONString();
+			}
+			
+			
+			//CustomerMongoModel customerMongoModel= new CustomerMongoModel(id, phoneNumber, parkingLotID, carSize, reservationTime, entranceTime, exitTime, parkingLotName, parkingLotLocationLongitude, parkingLotLocationLatitude, parkingLotAdress, parkingLotStartTime, parkingLotEndTime, parkingLotMaximumCapacity, ownerID, parkingLotGracePeriod, parkingLotPreResvationPeriod);
+			
+			//mongodb
+			
+			
     		
-    		reservationFacade.deleteResv(phoneNumber,reservationId);
-    		    		
-    		try{
-    			driverFacade.deleteDriver(phoneNumber);
-    		}catch(DataAccessException e)
-    		{
-    			e.printStackTrace();
-    		}
+    		
     		
     	}
     	catch(Exception e){

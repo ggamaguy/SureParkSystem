@@ -1,6 +1,11 @@
 package com.surepark.cmu.controller;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -9,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -187,33 +193,96 @@ public class DriverController {
     		method = RequestMethod.PUT,
     		consumes="application/json")
     public String HandoverUser(@PathVariable(value="phoneNumber") String phoneNumber ,@RequestBody JSONObject jsonO ){
-    	JSONObject jsonroot=new JSONObject();
+    	JSONObject result = new JSONObject();
     	if(jsonO.containsKey("secondaryPhoneNumber"))
     	{
 
         	String secondaryPhoneNumber = jsonO.get("secondaryPhoneNumber").toString();
         	
-        	try
-        	{
-        		driverFacade.handoverDriver(phoneNumber, secondaryPhoneNumber);
-        		
-        		jsonroot.put("result", "success");
-        		
-        	}catch(DataAccessException e)
-        	{
-        		e.printStackTrace();
-        		jsonroot.put("result", "fail");
-        	}
-        	
+        	JSONObject sendJsonO = new JSONObject();
+    		sendJsonO.put("type", "3");
+    		sendJsonO.put("phoneNumber", phoneNumber);
+    		sendJsonO.put("secondaryPhoneNumber", secondaryPhoneNumber);
+    		
+    		Socket socket = null;
+    		try{
+    			socket = new Socket("127.0.0.1", 5050);
+    		}catch(UnknownHostException e)
+    		{
+    			result.put("result", "fail");
+	    		e.printStackTrace();
+    		} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				result.put("result", "fail");
+			}
+    		
+    		System.out.println("send : "+ sendJsonO.toJSONString());
+    		PrintWriter out = null;
+			try {
+				out = new PrintWriter(socket.getOutputStream(), true);
+			} catch (IOException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			out.println(sendJsonO.toJSONString());
+    		
+			BufferedReader input = null;
+			try {
+				input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				result.put("result", "fail");
+	    		e1.printStackTrace();
+			}
+			String response = null;
+			try{
+				response = input.readLine();
+			}catch(IOException e)
+			{
+				result.put("result", "fail");
+	    		e.printStackTrace();
+	    		return result.toJSONString();
+			}
+			System.out.println(response);	
+			JSONParser parser = new JSONParser();
+			Object obj = null;
+			try {
+				obj = parser.parse(response);
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			JSONObject recvJsonObject = (JSONObject) obj;
+			
+			
+			if(recvJsonObject.containsKey("result") && recvJsonObject.get("result").equals("success"))
+			{
+				try
+	        	{
+	        		driverFacade.handoverDriver(phoneNumber, secondaryPhoneNumber);
+	        		
+	        		result.put("result", "success");
+	        		
+	        	}catch(DataAccessException e)
+	        	{
+	        		e.printStackTrace();
+	        		result.put("result", "fail");
+	        	}
+			}
+			else
+			{
+				result.put("result", "fail");
+			}
         	
     		
     	}else
     	{
-    		jsonroot.put("result", "fail");
+    		result.put("result", "fail");
     	}
     	
     	
-    	return jsonroot.toJSONString();
+    	return result.toJSONString();
     }
     
 

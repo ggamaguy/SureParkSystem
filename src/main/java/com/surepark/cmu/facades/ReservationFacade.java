@@ -1,5 +1,6 @@
 package com.surepark.cmu.facades;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,5 +53,12 @@ public class ReservationFacade implements ReservationInterface{
 	@Override
 	public void updateResv(ReservationModel rm) throws DataAccessException {
 		this.sqlSession.update("ReservationFacade.updateReservation", rm);
+	}
+
+	@Override
+	public void updateEntranceTime(ReservationModel rm) throws DataAccessException {
+		
+		this.sqlSession.update("ReservationFacade.updateEntranceTime", rm);
+		
 	}
 }

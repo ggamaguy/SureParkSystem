@@ -1,5 +1,6 @@
 package com.surepark.cmu.interfaces;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.dao.DataAccessException;
@@ -14,4 +15,5 @@ public interface ReservationInterface {
 	public List<String> getResvId(String phoneNumber) throws DataAccessException;
 	public void deleteResvByPhoneNumber(String phoneNumber) throws DataAccessException;
 	public void updateResv(ReservationModel rm) throws DataAccessException;
+	public void updateEntranceTime(ReservationModel rm) throws DataAccessException;
 }

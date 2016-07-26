@@ -90,4 +90,14 @@
 	where
 		reservationId = #{reservationId}
 	</update>
+	
+	<update id="updateEntranceTime" parameterType="com.surepark.cmu.domains.ReservationModel">
+	update 
+		reservation
+	set
+		entranceTime = #{entranceTime}
+	where
+		phoneNumber = #{phoneNumber}
+	</update>
+	
 </mapper>
