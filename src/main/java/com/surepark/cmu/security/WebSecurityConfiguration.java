@@ -9,19 +9,14 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
-import com.surepark.cmu.facades.UserFacade;
 import com.surepark.cmu.services.CustomDriverDetailsService;
 import com.surepark.cmu.services.CustomOwnerDetatilsService;
-import com.surepark.cmu.services.CustomUserDriverDetailsService;
 
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 
-	@Autowired
-	private CustomUserDriverDetailsService userDriverDetailsService;
 	@Autowired
 	private CustomDriverDetailsService driverDetailsService;
 	
@@ -31,7 +26,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		//System.out.println("??");
-		 auth.userDetailsService(userDriverDetailsService);
 		 auth.userDetailsService(driverDetailsService);
 		 auth.userDetailsService(ownerDetailsService);
 	}

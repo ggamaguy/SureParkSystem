@@ -43,7 +43,7 @@
 		phoneNumber = #{phoneNumber}
 	</select>
 
-	<select id="getReservation" resultType="com.surepark.cmu.domains.ReservationModel">
+	<select id="getReservation" parameterType="map" resultType="com.surepark.cmu.domains.ReservationModel">
 		select
 			reservationID,
 			phoneNumber,
@@ -56,14 +56,14 @@
 		from
 			reservation
 		where
-			reservationID = #{reservationId}
+			reservationID = #{reservationId} and phoneNumber = #{phoneNumber}
 	</select>
 
-	<delete id="deleteReservation" parameterType="String">
+	<delete id="deleteReservation" parameterType="map">
 		delete from
 			reservation
 		where
-			reservationId = #{reservationId}
+			reservationID = #{reservationId} and phoneNumber = #{phoneNumber}
 	</delete>
 
 	<delete id="deleteReservationByPhoneNumber" parameterType="String">

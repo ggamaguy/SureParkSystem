@@ -1,6 +1,8 @@
 package com.surepark.cmu.facades;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +29,19 @@ public class ReservationFacade implements ReservationInterface{
 	}
 
 	@Override
-	public void deleteResv(String reservationId) {
-		this.sqlSession.delete("ReservationFacade.deleteReservation",reservationId);
+	public void deleteResv(String phoneNumber,String reservationId) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("phoneNumber", phoneNumber);
+		map.put("reservationId", reservationId);
+		this.sqlSession.delete("ReservationFacade.deleteReservation",map);
 	}
 
 	@Override
-	public ReservationModel getResv(String reservationId) {
-		return sqlSession.selectOne("ReservationFacade.getReservation", reservationId);
+	public ReservationModel getResv(String phoneNumber,String reservationId) {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("phoneNumber", phoneNumber);
+		map.put("reservationId", reservationId);
+		return sqlSession.selectOne("ReservationFacade.getReservation", map);
 	}
 
 	@Override
