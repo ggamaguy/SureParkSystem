@@ -22,7 +22,6 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
 
 import com.surepark.cmu.services.CustomDriverDetailsService;
 import com.surepark.cmu.services.CustomOwnerDetatilsService;
-import com.surepark.cmu.services.CustomUserDriverDetailsService;
 
 @Configuration
 public class OAuth2ServerConfiguration {
@@ -51,8 +50,7 @@ public class OAuth2ServerConfiguration {
 					.antMatchers("/drivers/{phoneNumber}").authenticated()
 					.antMatchers("/drivers/handover/{phoneNumber}").authenticated()
 					.antMatchers("/cardvalidate").authenticated()
-					.antMatchers("/owners/login").authenticated()
-					.antMatchers("/owners/login/twofactor").authenticated()
+					.antMatchers("/opengate/{phoneNumber}").authenticated()
 					.antMatchers("/reservations").authenticated()
 					.antMatchers("/reservations/{reservationId}").authenticated()
 					.antMatchers("/noshow/{userPhoneNumber}").authenticated();
@@ -74,8 +72,6 @@ public class OAuth2ServerConfiguration {
 		@Qualifier("authenticationManagerBean")
 		private AuthenticationManager authenticationManager;
 
-		@Autowired
-		private CustomUserDriverDetailsService userDriverDetailsService;
 		
 		@Autowired
 		private CustomDriverDetailsService driverDetailsService;
@@ -96,7 +92,6 @@ public class OAuth2ServerConfiguration {
 			// @formatter:off
 			
 			endpoints.tokenStore(this.tokenStore).authenticationManager(this.authenticationManager)
-					.userDetailsService(userDriverDetailsService)
 					.userDetailsService(driverDetailsService)
 					.userDetailsService(ownerDetailsService);
 			// @formatter:on
