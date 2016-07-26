@@ -39,11 +39,11 @@
 
 	<select id="getReservationId" resultType="String">
 		select
-		reservationId
+			reservationId
 		from
-		reservation
+			reservation
 		where
-		phoneNumber = #{phoneNumber}
+			phoneNumber = #{phoneNumber}
 	</select>
 
 	<select id="getReservation" resultType="com.surepark.cmu.domains.ReservationModel">

@@ -3,6 +3,7 @@ package com.surepark.cmu.controller;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,12 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.surepark.cmu.domains.ParkingLotModel;
 import com.surepark.cmu.domains.ReservationModel;
+import com.surepark.cmu.interfaces.ParkingLotInterface;
 import com.surepark.cmu.interfaces.ReservationInterface;
 
 /**
@@ -29,6 +33,8 @@ public class LocalSurePark extends HttpServlet {
 
 	@Autowired
 	ReservationInterface reservationFacade;
+	@Autowired
+	ParkingLotInterface parkingLotFacade;
 
 	public LocalSurePark() {
 		super();
@@ -42,6 +48,37 @@ public class LocalSurePark extends HttpServlet {
 	 * parkingLotId){ JSONObject result = new JSONObject(); result.put("status",
 	 * "alive"); return result.toJSONString(); }
 	 */
+	@RequestMapping(value = "/sureparks/list/{cityName}",
+			method = RequestMethod.GET)
+	public String getParkingLotList(@PathVariable(value="cityName") String cityName){
+		JSONObject result = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		List<ParkingLotModel> parkingLotList = parkingLotFacade.selectParkingLotsByArea(cityName);
+		try{
+			for(int idx = 0; idx < parkingLotList.size();idx++){
+				ParkingLotModel temp = parkingLotList.get(idx);
+				JSONObject obj = new JSONObject();
+				obj.put("parkingLotID", temp.getParkingLotID());
+				obj.put("parkingLotName", temp.getParkingLotName());
+				obj.put("parkingLotLocationLatitude", temp.getParkingLotLocationLatitude());
+				obj.put("parkingLotLocationLongitude", temp.getParkingLotLocationLongitude());
+				obj.put("parkingLotAdress", temp.getParkingLotAdress());
+				obj.put("parkingLotStartTime", temp.getParkingLotStartTime());
+				obj.put("parkingLotEndTime", temp.getParkingLotEndTime());
+				obj.put("parkingLotMaximumCapacity", temp.getParkingLotMaximumCapacity());
+				obj.put("parkingLotGracePeriod", temp.getParkingLotGracePeriod());
+				obj.put("parkingLotPreResvationPeriod", temp.getParkingLotPreResvationPeriod());
+				jsonArray.add(obj);
+				result.put("count", idx+1);
+			}
+			result.put("sureparks", jsonArray);
+		}catch(Exception e){
+			e.printStackTrace();
+			result.clear();
+			result.put("result", "fail");
+		}
+		return result.toJSONString();
+	}
 
 	@RequestMapping(value = "/sureparks/sync/{parkingLotId}", 
 			method = RequestMethod.PUT, 
