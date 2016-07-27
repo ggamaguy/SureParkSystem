@@ -17,6 +17,7 @@ public interface ParkingLotInterface {
 	public void insertParkingLot(ParkingLotModel pm) throws DataAccessException;
 	public List<ParkingLotModel> selectParkingLotsByArea(String cityName) throws DataAccessException;
 	public List<ParkingLotModel> selectParkingLotByParkingLotId(String parkingLotId) throws DataAccessException;
+	public List<ParkingLotModel> selectParkingLotByOwnerId(String ownerId) throws DataAccessException;
 	public String selectParkingLotIP(String parkingLotId) throws DataAccessException;
 	
 }

@@ -2,7 +2,9 @@ package com.surepark.cmu.controller;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.surepark.cmu.domains.OwnerModel;
+import com.surepark.cmu.domains.ParkingLotModel;
 import com.surepark.cmu.facades.OwnerFacade;
 import com.surepark.cmu.facades.ParkingLotFacade;
 import com.surepark.cmu.facades.ParkingLotStatisticFacade;
@@ -190,6 +194,40 @@ public class OwnerController extends HttpServlet {
     		method = RequestMethod.GET)
     public String getAllParkingLots(@PathVariable(value = "ownerId") String ownerId, @ModelAttribute HashMap<String,String> loginState){
     	JSONObject result = new JSONObject();
+    	JSONArray parkingLotJSONArray = new JSONArray();
+    	List<ParkingLotModel> parkingLotList = new ArrayList<>();
+    	if((loginState.containsKey("Success1stLogin")
+    			&& loginState.containsKey("Success2ndLogin")
+    			&& loginState.containsKey("ownerId")
+    			)&&(loginState.get("Success1stLogin").equalsIgnoreCase("true")
+    			&& loginState.get("Success2ndLogin").equalsIgnoreCase("true")
+    			&& loginState.get("ownerId").equalsIgnoreCase(ownerId))){
+    		try{
+    			parkingLotList = parkingLotFacade.selectParkingLotByOwnerId(ownerId);
+    			result.put("count", parkingLotList.size());
+    			for(ParkingLotModel model : parkingLotList){
+    				JSONObject temp = new JSONObject();
+    				temp.put("parkingLotID", model.getParkingLotID());
+    				temp.put("parkingLotName", model.getParkingLotName());
+    				temp.put("ParkingLotLocationLatitude", model.getParkingLotLocationLatitude());
+    				temp.put("ParkingLotLocationLongitude", model.getParkingLotLocationLongitude());
+    				temp.put("parkingLotAdress", model.getParkingLotAdress());
+    				temp.put("parkingLotStartTime", model.getParkingLotStartTime());
+    				temp.put("parkingLotEndTime", model.getParkingLotEndTime());
+    				temp.put("parkingLotMaximumCapacity", model.getParkingLotMaximumCapacity());
+    				temp.put("ownerID", model.getOwnerID());
+    				temp.put("parkingLotGracePeriod", model.getParkingLotGracePeriod());
+    				temp.put("parkingLotPreResvationPeriod", model.getParkingLotPreResvationPeriod());
+    				parkingLotJSONArray.add(temp);
+    			}
+    		}catch(Exception e){
+    			e.printStackTrace();
+    			result.clear();
+    			result.put("result", "fail");
+    			return result.toJSONString();
+    		}
+    	}
+    	result.put("parkinglot",parkingLotJSONArray);
     	return result.toJSONString();
     }
     

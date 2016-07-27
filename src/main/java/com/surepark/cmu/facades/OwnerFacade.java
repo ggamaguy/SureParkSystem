@@ -28,9 +28,7 @@ public class OwnerFacade implements OwnerInterface {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("ownerID", ownerID);
 		map.put("ownerPassword", ownerPassword);
-
 		OwnerModel owner = sqlSession.selectOne("OwnerFacade.loginOwner", map);
-
 		return owner;
 	}
 
@@ -42,8 +40,6 @@ public class OwnerFacade implements OwnerInterface {
 		if (owner == null) {
 			throw new UsernameNotFoundException(String.format("Owner ID %s does not exist!", ownerID));
 		}
-		// System.out.println(user.toString());
-
 		return owner;
 	}
 
@@ -55,7 +51,6 @@ public class OwnerFacade implements OwnerInterface {
 		map.put("ownerTwofactorPassword", ownerSecondPwd);
 
 		int result = sqlSession.update("OwnerFacade.updateOwnerTwofactor", map);
-
 	}
 
 	@Override
@@ -64,9 +59,7 @@ public class OwnerFacade implements OwnerInterface {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("ownerID", ownerID);
 		map.put("ownerTwofactorPassword", ownerSecondPwd);
-
 		OwnerModel owner = sqlSession.selectOne("OwnerFacade.loginOwnerTwoFactor", map);
-
 		return owner;
 	}
 
