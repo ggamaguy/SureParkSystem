@@ -8,8 +8,11 @@ public class CustomerMongoModel {
 	
 	@Id
 	private String id;
+	
+	private int reservationId;
 	private String phoneNumber;
 	private String parkingLotID;
+	private String email;
     private int carSize;
     private Timestamp reservationTime;
     private Timestamp entranceTime;
@@ -29,30 +32,7 @@ public class CustomerMongoModel {
 	{}
 	
 	
-	public CustomerMongoModel(String id, String phoneNumber, String parkingLotID, int carSize,
-			Timestamp reservationTime, Timestamp entranceTime, Timestamp exitTime, String parkingLotName,
-			String parkingLotLocationLongitude, String parkingLotLocationLatitude, String parkingLotAdress,
-			String parkingLotStartTime, String parkingLotEndTime, String parkingLotMaximumCapacity, String ownerID,
-			String parkingLotGracePeriod, String parkingLotPreResvationPeriod) {
-		super();
-		this.id = id;
-		this.phoneNumber = phoneNumber;
-		this.parkingLotID = parkingLotID;
-		this.carSize = carSize;
-		this.reservationTime = reservationTime;
-		this.entranceTime = entranceTime;
-		this.exitTime = exitTime;
-		this.parkingLotName = parkingLotName;
-		this.parkingLotLocationLongitude = parkingLotLocationLongitude;
-		this.parkingLotLocationLatitude = parkingLotLocationLatitude;
-		this.parkingLotAdress = parkingLotAdress;
-		this.parkingLotStartTime = parkingLotStartTime;
-		this.parkingLotEndTime = parkingLotEndTime;
-		this.parkingLotMaximumCapacity = parkingLotMaximumCapacity;
-		this.ownerID = ownerID;
-		this.parkingLotGracePeriod = parkingLotGracePeriod;
-		this.parkingLotPreResvationPeriod = parkingLotPreResvationPeriod;
-	}
+	
 	public String getId() {
 		return id;
 	}
@@ -154,6 +134,26 @@ public class CustomerMongoModel {
 	}
 	public void setParkingLotPreResvationPeriod(String parkingLotPreResvationPeriod) {
 		this.parkingLotPreResvationPeriod = parkingLotPreResvationPeriod;
+	}
+
+
+	public int getReservationId() {
+		return reservationId;
+	}
+
+
+	public void setReservationId(int reservationId) {
+		this.reservationId = reservationId;
+	}
+
+
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 	

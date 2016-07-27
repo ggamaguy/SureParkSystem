@@ -31,7 +31,6 @@ import com.surepark.cmu.facades.ParkingLotFacade;
 import com.surepark.cmu.facades.ParkingLotStatusFacade;
 import com.surepark.cmu.facades.ReservationFacade;
 
-import scala.annotation.meta.setter;
 
 /**
  * Servlet implementation class OpenGateController
