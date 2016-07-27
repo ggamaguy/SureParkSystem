@@ -7,9 +7,9 @@ import com.surepark.cmu.domains.OwnerModel;
 public interface OwnerInterface {
 	
 	OwnerModel loginOwner(String ownerID, String ownerPassword) throws DataAccessException;
-	OwnerModel loginOwnerTwoFactor(String ownerID, String ownerTwofactorPassword) throws DataAccessException;
+	OwnerModel loginOwnerSecondPassword(String ownerID, String ownerSecondPwd) throws DataAccessException;
 	OwnerModel findOwner(String ownerID) throws DataAccessException;
-	void updateOwnerTwofactor(String ownerID, String ownerTwofactorPassword) throws DataAccessException;
+	void updateOwnerSecondPassword(String ownerID, String ownerSecondPwd) throws DataAccessException;
 	
 	
 

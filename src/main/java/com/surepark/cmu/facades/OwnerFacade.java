@@ -48,22 +48,22 @@ public class OwnerFacade implements OwnerInterface {
 	}
 
 	@Override
-	public void updateOwnerTwofactor(String ownerID, String ownerTwofactorPassword) throws DataAccessException {
+	public void updateOwnerSecondPassword(String ownerID, String ownerSecondPwd) throws DataAccessException {
 		// TODO Auto-generated method stub
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("ownerID", ownerID);
-		map.put("ownerTwofactorPassword", ownerTwofactorPassword);
+		map.put("ownerTwofactorPassword", ownerSecondPwd);
 
 		int result = sqlSession.update("OwnerFacade.updateOwnerTwofactor", map);
 
 	}
 
 	@Override
-	public OwnerModel loginOwnerTwoFactor(String ownerID, String ownerTwofactorPassword) throws DataAccessException {
+	public OwnerModel loginOwnerSecondPassword (String ownerID, String ownerSecondPwd) throws DataAccessException {
 		// TODO Auto-generated method stub
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("ownerID", ownerID);
-		map.put("ownerTwofactorPassword", ownerTwofactorPassword);
+		map.put("ownerTwofactorPassword", ownerSecondPwd);
 
 		OwnerModel owner = sqlSession.selectOne("OwnerFacade.loginOwnerTwoFactor", map);
 

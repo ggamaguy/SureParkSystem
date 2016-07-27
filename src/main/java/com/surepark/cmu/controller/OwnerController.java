@@ -2,10 +2,9 @@ package com.surepark.cmu.controller;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,13 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.surepark.cmu.domains.OwnerModel;
 import com.surepark.cmu.facades.OwnerFacade;
@@ -36,6 +36,7 @@ import com.surepark.cmu.facades.ParkingLotStatusFacade;
  * Servlet implementation class OwnerController
  */
 @RestController
+@SessionAttributes("loginState")
 public class OwnerController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -65,32 +66,22 @@ public class OwnerController extends HttpServlet {
     @RequestMapping(value="/owners/login", 
     		method = RequestMethod.POST,
     		consumes="application/json")
-    public String LoginOwner(@RequestBody JSONObject jsonO){
-    	JSONObject jsonroot=new JSONObject();
-    	//System.out.println(userPhoneNumber);
-    	
+    public String LoginOwner(@RequestBody JSONObject jsonO, @ModelAttribute HashMap<String,String> loginState){
+    	JSONObject jsonroot=new JSONObject();    	
     	OwnerModel owner = null;
-    	
     	try{
     		
     		if(jsonO.containsKey("ownerID") && jsonO.containsKey("ownerPassword") )
     		{
     			String ownerID = jsonO.get("ownerID").toString();
     			String ownerPassword = jsonO.get("ownerPassword").toString();
-    			
     			owner = ownerFacade.loginOwner(ownerID, ownerPassword);
-    			
-    			if(owner ==null)
-    			{
+    			if(owner == null){
     				jsonroot.put("result", "fail");
-    			}else if(owner.getOwnerID().equals(ownerID))
-    			{
-    				
+    			}else if(owner.getOwnerID().equals(ownerID)){
     				String ownerTwofactorPassword = RandomStringUtils.randomAlphanumeric(6).toLowerCase();
-    				
-    				try
-    				{
-    					ownerFacade.updateOwnerTwofactor(ownerID, ownerTwofactorPassword);
+    				try{
+    					ownerFacade.updateOwnerSecondPassword(ownerID, ownerTwofactorPassword);
     					
     					/*
     					try {
@@ -101,86 +92,106 @@ public class OwnerController extends HttpServlet {
 						}
     					*/
     					
-    				}catch(DataAccessException e)
-    				{
+    				}catch(DataAccessException e){
     					e.printStackTrace();
+    					jsonroot.put("result", "fail");
+    					loginState.put("Success1stLogIn", "false");
     				}
-    				
-    				
-    				
     				jsonroot.put("result", "sucess");
+    				loginState.put("Success1stLogIn", "success");
     			}
-    			
-    		}else
-    		{
+    		}else{
     			jsonroot.put("result", "fail");
+    			loginState.put("Success1stLogIn", "false");
     		}
-    		
-    		
-    	}catch(DataAccessException e)
-    	{
+    	}catch(DataAccessException e){
     		e.printStackTrace();
     		jsonroot.put("result", "fail");
+    		loginState.put("Success1stLogIn", "false");
     	}
     	
     	return jsonroot.toJSONString();
     }
     
-    @RequestMapping(value="/owners/login/twofactor", 
+    @RequestMapping(value="/owners/login/second", 
     		method = RequestMethod.POST,
     		consumes="application/json")
-    public String LoginOwnerTwoFactor(@RequestBody JSONObject jsonO){
+    public String LoginOwnerSecondFactor(@RequestBody JSONObject jsonO, @ModelAttribute HashMap<String,String> loginState){
     	JSONObject jsonroot=new JSONObject();
-    	//System.out.println(userPhoneNumber);
-    	
     	OwnerModel owner = null;
-    	
-    	try{
+    	if(loginState.get("Success1stLogIn").equalsIgnoreCase("true")){
+    		try{
+        		if(jsonO.containsKey("ownerID") && jsonO.containsKey("ownerTwofactorPassword") ){
+        			String ownerID = jsonO.get("ownerID").toString();
+        			String ownerSecondPassword = jsonO.get("ownerTwofactorPassword").toString();
+        			System.out.println(jsonO.toJSONString());
+        			owner = ownerFacade.loginOwnerSecondPassword(ownerID, ownerSecondPassword);
+        			System.out.println(owner.toString());
+        			if(owner ==null){
+        				jsonroot.put("result", "fail");
+        				ownerFacade.updateOwnerSecondPassword(ownerID, "");
+        				loginState.put("Success2ndLogin", "false");
+        			}else if(owner.getOwnerID().equals(ownerID)){  				
+        				jsonroot.put("result", "sucess");
+        				ownerFacade.updateOwnerSecondPassword(ownerID, "");
+        				loginState.put("Success2ndLogin", "true");
+        				loginState.put("ownerId", ownerID);
+        			}else{
+        				jsonroot.put("result", "fail");
+        				ownerFacade.updateOwnerSecondPassword(ownerID, "");
+        				loginState.put("Success2ndLogin", "false");
+        			}
+        		}else{
+        			jsonroot.put("result", "fail");
+        			loginState.put("Success2ndLogin", "false");
+        		}
+        	}catch(DataAccessException e){
+        		e.printStackTrace();
+        		jsonroot.put("result", "fail");
+        		loginState.put("Success2ndLogin", "false");
+        	}	
+    	}else{
     		
-    		if(jsonO.containsKey("ownerID") && jsonO.containsKey("ownerTwofactorPassword") )
-    		{
-    			String ownerID = jsonO.get("ownerID").toString();
-    			String ownerTwofactorPassword = jsonO.get("ownerTwofactorPassword").toString();
-    			
-    			System.out.println(jsonO.toJSONString());
-    			owner = ownerFacade.loginOwnerTwoFactor(ownerID, ownerTwofactorPassword);
-    			
-    			System.out.println(owner.toString());
-    			
-    			if(owner ==null)
-    			{
-    				jsonroot.put("result", "fail");
-
-    				ownerFacade.updateOwnerTwofactor(ownerID, "");
-    			}else if(owner.getOwnerID().equals(ownerID))
-    			{  				
-    				
-    				jsonroot.put("result", "sucess");
-    				ownerFacade.updateOwnerTwofactor(ownerID, "");
-    				
-    			}else
-    			{
-    				jsonroot.put("result", "fail");
-
-    				ownerFacade.updateOwnerTwofactor(ownerID, "");
-    			}
-    			
-    		}else
-    		{
-    			jsonroot.put("result", "fail");
-
-    		}
-    		
-    		
-    	}catch(DataAccessException e)
-    	{
-    		e.printStackTrace();
-    		jsonroot.put("result", "fail");
     	}
+    	
     	
     	return jsonroot.toJSONString();
     }
-    
+
+    @RequestMapping(value="/owner/{ownerId}",
+    		method = RequestMethod.GET)
+    public String getOwner(@PathVariable(value="ownerId") String ownerId, @ModelAttribute HashMap<String,String> loginState){
+    	JSONObject result = new JSONObject();
+    	OwnerModel owner = new OwnerModel();
+    	if((loginState.containsKey("Success1stLogIn") 
+    			&& loginState.containsKey("Success2ndLogIn") 
+    			&& loginState.containsKey("ownerId")
+    			)&& (loginState.get("Success1stLogIn").equalsIgnoreCase("true") 
+    			&& loginState.get("Success2ndLogIn").equalsIgnoreCase("true")
+    			&& loginState.get("ownerId").equalsIgnoreCase(ownerId))){
+    		try{
+    			owner = ownerFacade.findOwner(ownerId);
+    			result.put("ownerID", owner.getOwnerID());
+    			result.put("ownerName", owner.getOwnerName());
+    			result.put("ownerEmail", owner.getOwnerEmail());
+    			result.put("ownerPhoneNumber", owner.getOwnerPhoneNumber());   			
+    		}catch(Exception e){
+    			e.printStackTrace();
+        		result.put("result", "fail");
+        		return result.toJSONString();
+    		}
+    	}else{
+    		result.put("result", "fail");
+    	}
+    	return result.toJSONString();
+    }
+
+    @RequestMapping(value="/owner/{ownerId}/parkinglots",
+    		method = RequestMethod.GET)
+    public String getAllParkingLots(@PathVariable(value = "ownerId") String ownerId, @ModelAttribute HashMap<String,String> loginState){
+    	JSONObject result = new JSONObject();
+    	return result.toJSONString();
+    }
     
     private void sendMail(String ownerName, String ownerEmail, String Text) throws UnsupportedEncodingException, MessagingException
     {
