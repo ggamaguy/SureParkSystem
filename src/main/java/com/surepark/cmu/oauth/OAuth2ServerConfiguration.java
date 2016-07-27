@@ -50,7 +50,7 @@ public class OAuth2ServerConfiguration {
 					.antMatchers("/drivers/{phoneNumber}").authenticated()
 					.antMatchers("/drivers/handover/{phoneNumber}").authenticated()
 					.antMatchers("/cardvalidate").authenticated()
-					.antMatchers("/opengate/{phoneNumber}").authenticated()
+					.antMatchers("/opengate/{phoneNumber}/{resrvationID}").authenticated()
 					.antMatchers("/reservations").authenticated()
 					.antMatchers("/reservations/{reservationId}").authenticated()
 					.antMatchers("/noshow/{userPhoneNumber}").authenticated()

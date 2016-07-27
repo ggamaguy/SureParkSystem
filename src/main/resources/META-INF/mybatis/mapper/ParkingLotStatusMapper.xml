@@ -2,7 +2,30 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="ParkigLotStatusFacade">
-  
-  
+<mapper namespace="ParkingLotStatusFacade">
+	<update id="updateParkingLotState" parameterType="map">
+		update
+			parkinglotstatus
+		set
+			parkingLotState = #{parkingLotState}
+		where
+			parkingLotID = #{parkingLotID}
+	</update>
+	<update id="increaseAvaliableParkingSpot" parameterType="String">
+		update
+			parkinglotstatus
+		set
+			avaliableParkingSpot = avaliableParkingSpot + 1
+		where
+			parkingLotID = #{parkingLotID}
+	</update>
+	<update id="decreaseAvaliableParkingSpot" parameterType="String">
+		update
+			parkinglotstatus
+		set
+			avaliableParkingSpot = avaliableParkingSpot - 1
+		where
+			parkingLotID = #{parkingLotID}
+	</update>
+
 </mapper>

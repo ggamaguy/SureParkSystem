@@ -61,4 +61,11 @@ public class ReservationFacade implements ReservationInterface{
 		this.sqlSession.update("ReservationFacade.updateEntranceTime", rm);
 		
 	}
+
+	@Override
+	public void updateExitTime(ReservationModel rm) throws DataAccessException {
+		
+		this.sqlSession.update("ReservationFacade.updateExitTime", rm);
+		
+	}
 }

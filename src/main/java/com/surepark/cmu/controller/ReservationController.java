@@ -24,10 +24,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mongodb.util.JSON;
+import com.surepark.cmu.ConfigureInfo;
 import com.surepark.cmu.domains.CustomerMongoModel;
 import com.surepark.cmu.domains.DriverModel;
 import com.surepark.cmu.domains.ReservationModel;
 import com.surepark.cmu.facades.DriverFacade;
+import com.surepark.cmu.facades.ParkingLotFacade;
+import com.surepark.cmu.facades.ParkingLotStatusFacade;
 import com.surepark.cmu.interfaces.ReservationInterface;
 import com.surepark.cmu.mongorepository.CustomerMongoRepository;
 
@@ -47,6 +50,11 @@ public class ReservationController extends HttpServlet {
     @Autowired
 	private CustomerMongoRepository customerMongoRepository;
     
+    @Autowired
+    private ParkingLotFacade parkingLotFacade;
+    
+    @Autowired
+    private ParkingLotStatusFacade parkingLotStatusFacade;
     
     public ReservationController() {
         super();
@@ -104,11 +112,13 @@ public class ReservationController extends HttpServlet {
     		
     		DriverModel driver = driverFacade.findDriver(jsonO.get("phoneNumber").toString());
     		
+    		String parkingLotIP = parkingLotFacade.selectParkingLotIP(reservationModel.getParkingLotID());
+    		
     		JSONObject sendJsonO = generateMakeReservationDriver(driver,reservationModel);
     		
     		Socket socket = null;
     		try{
-    			socket = new Socket("127.0.0.1", 5050);
+    			socket = new Socket(parkingLotIP, ConfigureInfo.getLOCAL_SUREPARK_PORT());
     		}catch(UnknownHostException e)
     		{
     			result.put("result", "fail");
@@ -154,6 +164,7 @@ public class ReservationController extends HttpServlet {
 	    		try{
 	    			
 	    			driverFacade.updateDriverState(reservationModel.getPhoneNumber(), DriverModel.RESERVED);
+	    			parkingLotStatusFacade.decreaseAvaliableParkingSpot(reservationModel.getParkingLotID());
 	    			
 	    		}catch(DataAccessException e)
 	    		{
@@ -252,82 +263,100 @@ public class ReservationController extends HttpServlet {
     		method = RequestMethod.DELETE)
     public String deleteReservation(@PathVariable(value="phoneNumber") String phoneNumber,@PathVariable(value="reservationId") String reservationId){
     	JSONObject result = new JSONObject();
-    	try{
-    		
-    		JSONObject sendJsonO = new JSONObject();
-    		sendJsonO.put("type", "2");
-    		sendJsonO.put("phoneNumber", phoneNumber);
-    		
-    		Socket socket = null;
-    		try{
-    			socket = new Socket("127.0.0.1", 5050);
-    		}catch(UnknownHostException e)
-    		{
-    			result.put("result", "fail");
-	    		e.printStackTrace();
-    		}
-    		
-    		System.out.println("send : "+ sendJsonO.toJSONString());
-    		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-			out.println(sendJsonO.toJSONString());
-    		
-			BufferedReader input = null;
-			try {
-				input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				result.put("result", "fail");
-	    		e1.printStackTrace();
-			}
-			String response = null;
+    	DriverModel driverModel = driverFacade.findDriver(phoneNumber);
+		
+		if(driverModel.getState().equals(DriverModel.RESERVED))
+		{
 			try{
-				response = input.readLine();
-			}catch(IOException e)
-			{
-				result.put("result", "fail");
-	    		e.printStackTrace();
-	    		return result.toJSONString();
-			}
-			System.out.println(response);	
-			JSONParser parser = new JSONParser();
-			Object obj = parser.parse(response);
-			JSONObject recvJsonObject = (JSONObject) obj;
-			
-			
-			if(recvJsonObject.containsKey("result") && recvJsonObject.get("result").equals("success"))
-			{
-				try{
-	    			driverFacade.deleteDriver(phoneNumber);
-	    		}catch(DataAccessException e)
+	    		
+	    		JSONObject sendJsonO = new JSONObject();
+	    		sendJsonO.put("type", "2");
+	    		sendJsonO.put("phoneNumber", phoneNumber);
+	    		
+	    		
+	    		
+	    		ReservationModel reservationModel = reservationFacade.getResv(phoneNumber, reservationId);
+	    		
+	    		
+	    		String parkingLotIP = parkingLotFacade.selectParkingLotIP(reservationModel.getParkingLotID());
+	        	
+	        	Socket socket = null;
+	    		try {
+	    			socket = new Socket(parkingLotIP, ConfigureInfo.getLOCAL_SUREPARK_PORT());
+	    		}catch(UnknownHostException e)
 	    		{
-	    			e.printStackTrace();
 	    			result.put("result", "fail");
+		    		e.printStackTrace();
+	    		}
+	    		
+	    		System.out.println("send : "+ sendJsonO.toJSONString());
+	    		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+				out.println(sendJsonO.toJSONString());
+	    		
+				BufferedReader input = null;
+				try {
+					input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					result.put("result", "fail");
+		    		e1.printStackTrace();
+				}
+				String response = null;
+				try{
+					response = input.readLine();
+				}catch(IOException e)
+				{
+					result.put("result", "fail");
+		    		e.printStackTrace();
+		    		return result.toJSONString();
+				}
+				System.out.println(response);	
+				JSONParser parser = new JSONParser();
+				Object obj = parser.parse(response);
+				JSONObject recvJsonObject = (JSONObject) obj;
+				
+				
+				if(recvJsonObject.containsKey("result") && recvJsonObject.get("result").equals("success"))
+				{
+					try{
+		    			driverFacade.deleteDriver(phoneNumber);
+		    			parkingLotStatusFacade.increaseAvaliableParkingSpot(reservationModel.getParkingLotID());
+		    		}catch(DataAccessException e)
+		    		{
+		    			e.printStackTrace();
+		    			result.put("result", "fail");
+			    		
+			    		return result.toJSONString();
+		    		}
+				}else
+				{
+					result.put("result", "fail");
 		    		
 		    		return result.toJSONString();
-	    		}
-			}else
-			{
-				result.put("result", "fail");
+				}
+				
+				
+				//CustomerMongoModel customerMongoModel= new CustomerMongoModel(id, phoneNumber, parkingLotID, carSize, reservationTime, entranceTime, exitTime, parkingLotName, parkingLotLocationLongitude, parkingLotLocationLatitude, parkingLotAdress, parkingLotStartTime, parkingLotEndTime, parkingLotMaximumCapacity, ownerID, parkingLotGracePeriod, parkingLotPreResvationPeriod);
+				
+				//mongodb
+				
+				
 	    		
+	    		
+	    		
+	    	}
+	    	catch(Exception e){
+	    		e.printStackTrace();
+	    		result.put("result", "fail");
 	    		return result.toJSONString();
-			}
-			
-			
-			//CustomerMongoModel customerMongoModel= new CustomerMongoModel(id, phoneNumber, parkingLotID, carSize, reservationTime, entranceTime, exitTime, parkingLotName, parkingLotLocationLongitude, parkingLotLocationLatitude, parkingLotAdress, parkingLotStartTime, parkingLotEndTime, parkingLotMaximumCapacity, ownerID, parkingLotGracePeriod, parkingLotPreResvationPeriod);
-			
-			//mongodb
-			
-			
-    		
-    		
-    		
-    	}
-    	catch(Exception e){
-    		e.printStackTrace();
-    		result.put("result", "fail");
-    		return result.toJSONString();
-    	}
-    	result.put("result", "success");
+	    	}
+	    	result.put("result", "success");
+		}else
+		{
+			result.put("result", "fail");
+			return result.toJSONString();
+		}
+    	
     	return result.toJSONString();
     }
     

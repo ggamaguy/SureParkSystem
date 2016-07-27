@@ -21,10 +21,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.surepark.cmu.ConfigureInfo;
 import com.surepark.cmu.domains.DriverModel;
 import com.surepark.cmu.domains.ReservationModel;
 import com.surepark.cmu.facades.DriverFacade;
+import com.surepark.cmu.facades.ParkingLotFacade;
+import com.surepark.cmu.facades.ParkingLotStatusFacade;
 import com.surepark.cmu.facades.ReservationFacade;
 
 import scala.annotation.meta.setter;
@@ -32,6 +36,7 @@ import scala.annotation.meta.setter;
 /**
  * Servlet implementation class OpenGateController
  */
+@RestController
 public class OpenGateController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -42,6 +47,12 @@ public class OpenGateController extends HttpServlet {
 	@Autowired
 	private DriverFacade driverFacade; 
 	
+	@Autowired
+	private ParkingLotFacade parkingLotFacade;
+	
+	@Autowired
+	private ParkingLotStatusFacade parkingLotStatusFacade;
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -50,10 +61,10 @@ public class OpenGateController extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
     
-    @RequestMapping(value="/opengate/{phoneNumber}", 
+    @RequestMapping(value="/opengate/{phoneNumber}/{resrvationID}", 
     		method = RequestMethod.GET,
     		consumes="application/json")
-    public String openGate(@PathVariable(value="phoneNumber") String phoneNumber)
+    public String openGate(@PathVariable(value="phoneNumber") String phoneNumber,@PathVariable(value="resrvationID") String resrvationID)
     {
     	
     	JSONObject result = null;
@@ -62,11 +73,11 @@ public class OpenGateController extends HttpServlet {
     	
     	if(driverModel.getState().equals(DriverModel.RESERVED))
     	{
-    		result = reservedOpenTheGate(phoneNumber);
+    		result = entranceOpenTheGate(phoneNumber, resrvationID);
     		
     	}else if (driverModel.getState().equals(DriverModel.PARKED))
     	{
-    		result = parkedOpenTheGate(phoneNumber);
+    		result = exitOpenTheGate(phoneNumber,resrvationID);
     	}else if(driverModel.getState().equals(DriverModel.UNRESERVED))
     	{
     		result = unreservedOpenTheGate();
@@ -82,20 +93,23 @@ public class OpenGateController extends HttpServlet {
     	
     }
     
-    public JSONObject reservedOpenTheGate(String phoneNumber)
+    public JSONObject entranceOpenTheGate(String phoneNumber,String reservationID)
     {
     	JSONObject result = new JSONObject();
     	
     	JSONObject jsonO = new JSONObject();
     	
+    	
     	jsonO.put("type", "4");
     	jsonO.put("phoneNumber", phoneNumber);
     	jsonO.put("state", DriverModel.RESERVED);
-    	
+    	jsonO.put("reservationID", reservationID);
+    	ReservationModel reservationModel = reservationFacade.getResv(phoneNumber, reservationID);
+    	String parkingLotIP = parkingLotFacade.selectParkingLotIP(reservationModel.getParkingLotID());
     	
     	Socket socket = null;
 		try {
-			socket = new Socket("127.0.0.1", 5050);
+			socket = new Socket(parkingLotIP, ConfigureInfo.getLOCAL_SUREPARK_PORT());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -159,7 +173,7 @@ public class OpenGateController extends HttpServlet {
     	return result;
     }
     
-    public JSONObject parkedOpenTheGate(String phoneNumber)
+    public JSONObject exitOpenTheGate(String phoneNumber, String reservationID)
     {
     	JSONObject result = new JSONObject();
     	
@@ -168,12 +182,13 @@ public class OpenGateController extends HttpServlet {
     	jsonO.put("type", "5");
     	jsonO.put("phoneNumber", phoneNumber);
     	jsonO.put("state", DriverModel.PARKED);
-    	
-    	jsonO.put("phoneNumber", phoneNumber);
+    	jsonO.put("reservationID", reservationID);
+    	ReservationModel reservationModel = reservationFacade.getResv(phoneNumber, reservationID);
+    	String parkingLotIP = parkingLotFacade.selectParkingLotIP(reservationModel.getParkingLotID());
     	
     	Socket socket = null;
 		try {
-			socket = new Socket("127.0.0.1", 5050);
+			socket = new Socket(parkingLotIP, ConfigureInfo.getLOCAL_SUREPARK_PORT());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -205,6 +220,32 @@ public class OpenGateController extends HttpServlet {
 		}
 		System.out.println(response);		
     	
+		JSONParser parser = new JSONParser();
+		Object obj = null;
+		try {
+			obj = parser.parse(response);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		JSONObject recvJsonObject = (JSONObject) obj;
+		
+		if(recvJsonObject.containsKey("result") && recvJsonObject.get("result").equals("success"))
+		{
+			String state = recvJsonObject.get("state").toString();
+			String entranceTime = recvJsonObject.get("exitTime").toString();
+			ReservationModel rm = new ReservationModel();
+			rm.setPhoneNumber(phoneNumber);
+			rm.setEntranceTime(Timestamp.valueOf(entranceTime));
+			reservationFacade.updateExitTime(rm);
+			driverFacade.updateDriverState(phoneNumber, DriverModel.PAYING);
+			parkingLotStatusFacade.decreaseAvaliableParkingSpot(reservationModel.getParkingLotID());
+			result.put("result", "success");
+			
+		}else if (recvJsonObject.containsKey("result") && recvJsonObject.get("result").equals("fail"))
+		{
+			result.put("result", "fail");
+		}
     	
     	return result;
     }

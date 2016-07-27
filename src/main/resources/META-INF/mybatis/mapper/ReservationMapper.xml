@@ -100,4 +100,13 @@
 		phoneNumber = #{phoneNumber}
 	</update>
 	
+	<update id="updateExitTime" parameterType="com.surepark.cmu.domains.ReservationModel">
+	update 
+		reservation
+	set
+		exitTime = #{exitTime}
+	where
+		phoneNumber = #{phoneNumber}
+	</update>
+	
 </mapper>

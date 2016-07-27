@@ -124,7 +124,7 @@ public class DriverController {
     	
     		jsonroot.put("phoneNumber", driver.getPhoneNumber());
     		jsonroot.put("state", driver.getState());
-    		if(driver.getState().equals(DriverModel.RESERVED))
+    		if(driver.getState().equals(DriverModel.RESERVED) || driver.getState().equals(DriverModel.PARKED) || driver.getState().equals(DriverModel.PAYING ))
     		{
     			List<String> reservationIDList = reservationFacade.getResvId(phoneNumber);
         		jsonroot.put("reservationID", reservationIDList.get(0));
