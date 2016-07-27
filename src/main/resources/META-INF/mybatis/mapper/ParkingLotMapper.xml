@@ -82,6 +82,15 @@
  		where
  			parkingLotAdress like CONCAT('%',#{area},'%') 
  	</select>
+ 	
+ 	<select id="selectParkingLotIP" parameterType = "String" resultType = "String">
+ 		select
+ 			parkinglotIP
+ 		from 
+ 			parkingLot
+ 		where
+ 			parkingLotID = #{parkingLotID}
+ 	</select>
   
 <!-- parkingLotID, 
 parkingLotName, 

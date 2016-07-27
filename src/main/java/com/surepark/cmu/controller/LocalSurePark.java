@@ -2,14 +2,15 @@ package com.surepark.cmu.controller;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.surepark.cmu.domains.ReservationModel;
 import com.surepark.cmu.domains.ParkingLotModel;
 import com.surepark.cmu.domains.ReservationModel;
 import com.surepark.cmu.interfaces.ParkingLotInterface;
@@ -30,7 +31,7 @@ import com.surepark.cmu.interfaces.ReservationInterface;
 @RestController
 public class LocalSurePark extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+       
 	@Autowired
 	ReservationInterface reservationFacade;
 	@Autowired
@@ -47,6 +48,7 @@ public class LocalSurePark extends HttpServlet {
 	 * localSureParkPingEcho(@PathVariable(value="parkingLotId") String
 	 * parkingLotId){ JSONObject result = new JSONObject(); result.put("status",
 	 * "alive"); return result.toJSONString(); }
+>>>>>>> reservation
 	 */
 	@RequestMapping(value = "/sureparks/list/{cityName}",
 			method = RequestMethod.GET)

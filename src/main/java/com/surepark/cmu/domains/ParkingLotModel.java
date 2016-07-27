@@ -1,6 +1,9 @@
 package com.surepark.cmu.domains;
 
 public class ParkingLotModel {
+	
+	
+
 
 	private String parkingLotID; 
 	private String parkingLotName; 
@@ -14,6 +17,17 @@ public class ParkingLotModel {
 	private String parkingLotGracePeriod; 
 	private String parkingLotPreResvationPeriod;
 	
+	
+	public ParkingLotModel()
+	{
+		
+	}
+	
+	
+	
+	
+	
+
 	public String getParkingLotID() {
 		return parkingLotID;
 	}

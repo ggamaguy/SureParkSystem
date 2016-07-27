@@ -40,5 +40,11 @@ public class ParkingLotFacade implements ParkingLotInterface{
 	public List<ParkingLotModel> selectParkingLotByParkingLotId(String parkingLotId) throws DataAccessException {
 		return sqlSession.selectList("ParkingLotFacade.selectParkingLotByParkingLotId", parkingLotId);
 	}
+
+	@Override
+	public String selectParkingLotIP(String parkingLotID) throws DataAccessException {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("ParkingLotFacade.selectParkingLotIP", parkingLotID);
+	}
 	 	
 }

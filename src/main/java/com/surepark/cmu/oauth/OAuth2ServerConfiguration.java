@@ -21,7 +21,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
 import com.surepark.cmu.services.CustomDriverDetailsService;
-import com.surepark.cmu.services.CustomUserDriverDetailsService;
+import com.surepark.cmu.services.CustomOwnerDetatilsService;
 
 @Configuration
 public class OAuth2ServerConfiguration {
@@ -50,6 +50,7 @@ public class OAuth2ServerConfiguration {
 					.antMatchers("/drivers/{phoneNumber}").authenticated()
 					.antMatchers("/drivers/handover/{phoneNumber}").authenticated()
 					.antMatchers("/cardvalidate").authenticated()
+					.antMatchers("/opengate/{phoneNumber}/{resrvationID}").authenticated()
 					.antMatchers("/reservations").authenticated()
 					.antMatchers("/reservations/{reservationId}").authenticated()
 					.antMatchers("/noshow/{userPhoneNumber}").authenticated()
@@ -70,11 +71,12 @@ public class OAuth2ServerConfiguration {
 		@Qualifier("authenticationManagerBean")
 		private AuthenticationManager authenticationManager;
 
-		@Autowired
-		private CustomUserDriverDetailsService userDriverDetailsService;
 		
 		@Autowired
 		private CustomDriverDetailsService driverDetailsService;
+		
+		@Autowired
+		private CustomOwnerDetatilsService ownerDetailsService;
 
 		@Override
 		public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
@@ -89,8 +91,8 @@ public class OAuth2ServerConfiguration {
 			// @formatter:off
 			
 			endpoints.tokenStore(this.tokenStore).authenticationManager(this.authenticationManager)
-					.userDetailsService(userDriverDetailsService)
-					.userDetailsService(driverDetailsService);
+					.userDetailsService(driverDetailsService)
+					.userDetailsService(ownerDetailsService);
 			// @formatter:on
 		}
 
@@ -103,6 +105,13 @@ public class OAuth2ServerConfiguration {
 						.withClient("user_driver")
 								.authorizedGrantTypes("authorization_code","password", "refresh_token")
 								.authorities("USER")
+								.scopes("read", "write")
+								.resourceIds(RESOURCE_ID).secret("123456")
+								.accessTokenValiditySeconds(60 * 60 * 3)
+						.and()
+						.withClient("owner")
+								.authorizedGrantTypes("authorization_code","password", "refresh_token")
+								.authorities("ADMIN")
 								.scopes("read", "write")
 								.resourceIds(RESOURCE_ID).secret("123456")
 								.accessTokenValiditySeconds(60 * 60 * 3);
