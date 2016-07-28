@@ -92,15 +92,6 @@
  			parkingLotID = #{parkingLotID}
  	</select>
  	
- 	<select id="selectParkingLotIP" parameterType = "String" resultType = "String">
- 		select
- 			parkinglotIP
- 		from 
- 			parkingLot
- 		where
- 			parkingLotID = #{parkingLotID}
- 	</select>
- 	
  	
  	
   

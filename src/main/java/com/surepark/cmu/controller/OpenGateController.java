@@ -232,13 +232,13 @@ public class OpenGateController extends HttpServlet {
 		if(recvJsonObject.containsKey("result") && recvJsonObject.get("result").equals("success"))
 		{
 			String state = recvJsonObject.get("state").toString();
-			String entranceTime = recvJsonObject.get("exitTime").toString();
+			String exitTime = recvJsonObject.get("exitTime").toString();
 			ReservationModel rm = new ReservationModel();
 			rm.setPhoneNumber(phoneNumber);
-			rm.setEntranceTime(Timestamp.valueOf(entranceTime));
+			rm.setExitTime(Timestamp.valueOf(exitTime));
 			reservationFacade.updateExitTime(rm);
 			driverFacade.updateDriverState(phoneNumber, DriverModel.PAYING);
-			parkingLotStatusFacade.decreaseAvaliableParkingSpot(reservationModel.getParkingLotID());
+			parkingLotStatusFacade.increaseAvaliableParkingSpot(reservationModel.getParkingLotID());
 			result.put("result", "success");
 			
 		}else if (recvJsonObject.containsKey("result") && recvJsonObject.get("result").equals("fail"))

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.surepark.cmu.ConfigureInfo;
 import com.surepark.cmu.domains.CardModel;
 import com.surepark.cmu.domains.CustomerMongoModel;
 import com.surepark.cmu.domains.ParkingLotModel;
@@ -54,75 +55,87 @@ public class PaymentController extends HttpServlet {
 	private PaymentAPI paymentAPI;
 	
 
-	@RequestMapping(value="/payment/{phoneNumber}/{reservationID}", 
+	@RequestMapping(value="/payment/{phoneNumber}/{reservationId}", 
     		method = RequestMethod.POST,
     		consumes="application/json")
     public String RegisterDriver(@PathVariable(value="phoneNumber") String phoneNumber,@PathVariable(value="reservationId") String reservationId) throws IOException, ParseException{
     	
+		System.out.println(phoneNumber + " " +reservationId +" 들어옴 ");
     	JSONObject jsonroot=new JSONObject();
+    	
+    	
     	
     	ReservationModel reservationModel = reservationFacade.getResv(phoneNumber, reservationId);
     	
-    	double money = calculateMoney(reservationModel.getEntranceTime().toString(), reservationModel.getExitTime().toString());
+    	System.out.println(reservationModel.toString());
+    	if(reservationModel !=null)
+    	{
+    		double money = calculateMoney(reservationModel.getEntranceTime().toString(), reservationModel.getExitTime().toString());
+        	
+        	
+    		String cardNumber = reservationModel.getCardNumber();
+    		String cardExpirationMonth = reservationModel.getCardExpirationMonth();
+    		String cardExpirationYear = reservationModel.getCardExpirationYear();
+    		String cardValidationCode = reservationModel.getCardValidationCode();
+    		String cardHolder = reservationModel.getCardHolder();
+    		
+    		CardModel card = new CardModel(phoneNumber, cardNumber, cardExpirationMonth, cardExpirationYear, cardValidationCode, cardHolder);
+    		
+    		System.out.println(card.toString());
+    		boolean result = paymentAPI.payment(card , money);
+        	
+    		if(result)
+    		{
+    			boolean sendmailResult = sendPaymentEmail(reservationModel.getEmail(),money);
+    			
+    			if(sendmailResult)
+    			{
+    				ParkingLotModel parkingLotModel = parkingLotFacade.selectParkingLotByParkingLotId(reservationModel.getParkingLotID());
+    				
+    				CustomerMongoModel customer = new CustomerMongoModel();
+    				
+    				customer.setCarSize(reservationModel.getCarSize());
+    				customer.setEntranceTime(reservationModel.getEntranceTime().toLocaleString());
+    				customer.setExitTime(reservationModel.getExitTime().toLocaleString());
+    				customer.setPhoneNumber(reservationModel.getPhoneNumber());
+    				customer.setReservationTime(reservationModel.getReservationTime().toLocaleString());
+    				customer.setEmail(reservationModel.getEmail());
+    				customer.setReservationId(reservationModel.getReservationId());
+    				customer.setOwnerID(parkingLotModel.getOwnerID());
+    				customer.setParkingLotAdress(parkingLotModel.getParkingLotAdress());
+    				customer.setParkingLotEndTime(parkingLotModel.getParkingLotEndTime());
+    				customer.setParkingLotGracePeriod(parkingLotModel.getParkingLotGracePeriod());
+    				customer.setParkingLotID(parkingLotModel.getParkingLotID());
+    				customer.setParkingLotLocationLatitude(parkingLotModel.getParkingLotLocationLatitude());
+    				customer.setParkingLotLocationLongitude(parkingLotModel.getParkingLotLocationLongitude());
+    				customer.setParkingLotMaximumCapacity(parkingLotModel.getParkingLotMaximumCapacity());
+    				customer.setParkingLotName(parkingLotModel.getParkingLotName());
+    				customer.setParkingLotPreResvationPeriod(parkingLotModel.getParkingLotPreResvationPeriod());
+    				customer.setParkingLotStartTime(parkingLotModel.getParkingLotStartTime());
+    				customer.setPaymentFee(money+"");
+    				
+    				customerMongoRepository.save(customer);
+    				
+    				driverFacade.deleteDriver(phoneNumber);
+    				
+    				
+    				jsonroot.put("result", "success");
+    				
+    			}else
+    			{
+    				// 메일 보내기 실패
+    			}
+    			
+    			
+    		}else
+    		{
+    			jsonroot.put("result", "fail");
+    		}
+    	}else
+    	{
+    		jsonroot.put("result", "fail");
+    	}
     	
-    	
-		String cardNumber = reservationModel.getCardNumber();
-		String cardExpirationMonth = reservationModel.getCardExpirationMonth();
-		String cardExpirationYear = reservationModel.getCardExpirationYear();
-		String cardValidationCode = reservationModel.getCardValidationCode();
-		String cardHolder = reservationModel.getCardHolder();
-		
-		CardModel card = new CardModel(phoneNumber, cardNumber, cardExpirationMonth, cardExpirationYear, cardValidationCode, cardHolder);
-		
-		System.out.println(card.toString());
-		boolean result = paymentAPI.payment(card , money);
-    	
-		if(result)
-		{
-			boolean sendmailResult = sendPaymentEmail(reservationModel.getEmail(),money);
-			
-			if(sendmailResult)
-			{
-				ParkingLotModel parkingLotModel = parkingLotFacade.selectParkingLotByParkingLotId(reservationModel.getParkingLotID());
-				
-				CustomerMongoModel customer = new CustomerMongoModel();
-				
-				customer.setCarSize(reservationModel.getCarSize());
-				customer.setEntranceTime(reservationModel.getEntranceTime());
-				customer.setExitTime(reservationModel.getExitTime());
-				customer.setPhoneNumber(reservationModel.getPhoneNumber());
-				customer.setReservationTime(reservationModel.getReservationTime());
-				customer.setEmail(reservationModel.getEmail());
-				customer.setReservationId(reservationModel.getReservationId());
-				customer.setOwnerID(parkingLotModel.getOwnerID());
-				customer.setParkingLotAdress(parkingLotModel.getParkingLotAdress());
-				customer.setParkingLotEndTime(parkingLotModel.getParkingLotEndTime());
-				customer.setParkingLotGracePeriod(parkingLotModel.getParkingLotGracePeriod());
-				customer.setParkingLotID(parkingLotModel.getParkingLotID());
-				customer.setParkingLotLocationLatitude(parkingLotModel.getParkingLotLocationLatitude());
-				customer.setParkingLotLocationLongitude(parkingLotModel.getParkingLotLocationLongitude());
-				customer.setParkingLotMaximumCapacity(parkingLotModel.getParkingLotMaximumCapacity());
-				customer.setParkingLotName(parkingLotModel.getParkingLotName());
-				customer.setParkingLotPreResvationPeriod(parkingLotModel.getParkingLotPreResvationPeriod());
-				customer.setParkingLotStartTime(parkingLotModel.getParkingLotStartTime());
-				
-				customerMongoRepository.save(customer);
-				
-				driverFacade.deleteDriver(phoneNumber);
-				
-				
-				jsonroot.put("result", "success");
-				
-			}else
-			{
-				// 메일 보내기 실패
-			}
-			
-			
-		}else
-		{
-			jsonroot.put("result", "fail");
-		}
     	
     	
     	return jsonroot.toJSONString();
@@ -147,7 +160,7 @@ public class PaymentController extends HttpServlet {
 		{
 			money = ( (int)( diffTime / DEFAULT_CAL_TIME ) + 1.0 ) * DEFAULT_CAL_MONEY;
 			
-		}else if(diffTime < 10)
+		}else if(diffTime < ConfigureInfo.getPaymentDefaultTime())
 		{
 			money = 0.;
 		}else

@@ -14,9 +14,9 @@ public class CustomerMongoModel {
 	private String parkingLotID;
 	private String email;
     private int carSize;
-    private Timestamp reservationTime;
-    private Timestamp entranceTime;
-    private Timestamp exitTime;
+    private String reservationTime;
+    private String entranceTime;
+    private String exitTime;
     private String parkingLotName; 
 	private String parkingLotLocationLongitude;
 	private String parkingLotLocationLatitude;
@@ -27,6 +27,7 @@ public class CustomerMongoModel {
 	private String ownerID;
 	private String parkingLotGracePeriod; 
 	private String parkingLotPreResvationPeriod;
+	private String paymentFee;
 	
 	public CustomerMongoModel()
 	{}
@@ -57,22 +58,22 @@ public class CustomerMongoModel {
 	public void setCarSize(int carSize) {
 		this.carSize = carSize;
 	}
-	public Timestamp getReservationTime() {
+	public String getReservationTime() {
 		return reservationTime;
 	}
-	public void setReservationTime(Timestamp reservationTime) {
+	public void setReservationTime(String reservationTime) {
 		this.reservationTime = reservationTime;
 	}
-	public Timestamp getEntranceTime() {
+	public String getEntranceTime() {
 		return entranceTime;
 	}
-	public void setEntranceTime(Timestamp entranceTime) {
+	public void setEntranceTime(String entranceTime) {
 		this.entranceTime = entranceTime;
 	}
-	public Timestamp getExitTime() {
+	public String getExitTime() {
 		return exitTime;
 	}
-	public void setExitTime(Timestamp exitTime) {
+	public void setExitTime(String exitTime) {
 		this.exitTime = exitTime;
 	}
 	public String getParkingLotName() {
@@ -155,6 +156,19 @@ public class CustomerMongoModel {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+
+
+	public String getPaymentFee() {
+		return paymentFee;
+	}
+
+
+
+	public void setPaymentFee(String paymentFee) {
+		this.paymentFee = paymentFee;
+	}
+	
 	
 	
 

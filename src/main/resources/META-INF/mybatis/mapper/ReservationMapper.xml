@@ -50,16 +50,21 @@
 		select
 			reservationID,
 			phoneNumber,
-   			email,
-   			parkingLotID,
-   			carSize,
-   			reservationTime,
-   			entranceTime,
-   			exitTime	
+			email,
+			parkingLotID,
+			carSize,
+			reservationTime,
+			entranceTime,
+			exitTime,
+			cardNumber,
+			cardExpirationMonth,
+			cardExpirationYear,
+			cardValidationCode,
+			cardHolder
 		from
 			reservation
 		where
-			reservationID = #{reservationId} and phoneNumber = #{phoneNumber}
+			reservationID = #{reservationID} and phoneNumber = #{phoneNumber}
 	</select>
 
 	<delete id="deleteReservation" parameterType="map">
