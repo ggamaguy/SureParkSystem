@@ -96,7 +96,7 @@ public class OwnerController extends HttpServlet {
 					ownerFacade.updateOwnerAvailable(ownerID, tryModel.getOwner1stLoginTry(), tryModel.getOwner2ndLoginTry(), tryModel.getOwnerAccountAvailable());
 					String ownerSecondPassword = RandomStringUtils.randomAlphanumeric(6).toLowerCase();
 					try {
-						//ownerFacade.updateOwnerSecondPassword(ownerID, ownerSecondPassword);
+						ownerFacade.updateOwnerSecondPassword(ownerID, ownerSecondPassword);
 
 						/*
 						 * try { sendMail(owner.getOwnerName(),
