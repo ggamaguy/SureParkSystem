@@ -75,10 +75,25 @@ public class OwnerController extends HttpServlet {
 				String ownerID = jsonO.get("ownerID").toString();
 				String ownerPassword = jsonO.get("ownerPassword").toString();
 				owner = ownerFacade.loginOwner(ownerID, ownerPassword);
-				if (owner == null) {
+				if (owner == null || owner.getOwnerAccountAvailable() == "false") {
 					jsonroot.put("result", "fail");
 					loginState.put("Success1stLogin", "false");
+					OwnerModel tryModel = ownerFacade.getOwnerAvailable(ownerID);
+					System.out.println(ownerID);
+					int cnt = Integer.parseInt(tryModel.getOwner1stLoginTry());
+					cnt++;
+					tryModel.setOwner1stLoginTry(String.valueOf(cnt));
+					System.out.println(tryModel.getOwner1stLoginTry());
+					if(Integer.valueOf(tryModel.getOwner1stLoginTry()) >= 3){
+						tryModel.setOwnerAccountAvailable("false");
+						jsonroot.put("result", "unavailable");
+					}
+					ownerFacade.updateOwnerAvailable(ownerID, tryModel.getOwner1stLoginTry(), tryModel.getOwner2ndLoginTry(), tryModel.getOwnerAccountAvailable());
+				
 				} else if (owner.getOwnerID().equals(ownerID)) {
+					OwnerModel tryModel = ownerFacade.getOwnerAvailable(ownerID);
+					tryModel.setOwner1stLoginTry("0");
+					ownerFacade.updateOwnerAvailable(ownerID, tryModel.getOwner1stLoginTry(), tryModel.getOwner2ndLoginTry(), tryModel.getOwnerAccountAvailable());
 					String ownerSecondPassword = RandomStringUtils.randomAlphanumeric(6).toLowerCase();
 					try {
 						//ownerFacade.updateOwnerSecondPassword(ownerID, ownerSecondPassword);
@@ -145,8 +160,19 @@ public class OwnerController extends HttpServlet {
 						ownerFacade.updateOwnerSecondPassword(ownerID, "");
 						loginState.put("Success1stLogin", "true");
 						loginState.put("Success2ndLogin", "false");
+						OwnerModel tryModel = ownerFacade.getOwnerAvailable(ownerID);
+						int cnt = Integer.parseInt(tryModel.getOwner2ndLoginTry());
+						cnt++;
+						tryModel.setOwner2ndLoginTry(String.valueOf(cnt));
+						if(Integer.valueOf(tryModel.getOwner2ndLoginTry())>=3){
+							tryModel.setOwnerAccountAvailable("false");
+							jsonroot.put("result", "unavailable");
+						}
+						ownerFacade.updateOwnerAvailable(ownerID, tryModel.getOwner1stLoginTry(), tryModel.getOwner2ndLoginTry(), tryModel.getOwnerAccountAvailable());
 					} else if (owner.getOwnerID().equals(ownerID)){
-						System.out.println("6");
+						OwnerModel tryModel = ownerFacade.getOwnerAvailable(ownerID);
+						tryModel.setOwner2ndLoginTry("0");
+						ownerFacade.updateOwnerAvailable(ownerID, tryModel.getOwner1stLoginTry(), tryModel.getOwner2ndLoginTry(), tryModel.getOwnerAccountAvailable());
 						jsonroot.put("result", "sucess");
 						ownerFacade.updateOwnerSecondPassword(ownerID, "");
 						loginState.put("Success1stLogin", "true");

@@ -4,56 +4,76 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="OwnerFacade">
 
-   <select id="loginOwner" parameterType="map" resultType="com.surepark.cmu.domains.OwnerModel">
+	<select id="loginOwner" parameterType="map"
+		resultType="com.surepark.cmu.domains.OwnerModel">
 		select
-			ownerID,
-			ownerName,
-			ownerPassword,
-			ownerEmail,
-			ownerPhoneNumber,
-			ownerSecondPassword
+		ownerID,
+		ownerName,
+		ownerPassword,
+		ownerEmail,
+		ownerPhoneNumber,
+		ownerSecondPassword
 		from
-			owner
+		owner
 		where
-			ownerID = #{ownerID} and ownerPassword = #{ownerPassword}
-	</select> 
-	
-	
-	<select id="findOwner"  resultType="com.surepark.cmu.domains.OwnerModel">
-		select
-			ownerID,
-			ownerName,
-			ownerPassword,
-			ownerEmail,
-			ownerPhoneNumber,
-			ownerSecondPassword
-		from
-			owner
-		where
-			ownerID = #{ownerID}
-	</select> 
-  
-  <update id="updateOwnerSecondPwd" parameterType="map" >
-    	update owner 
-    	set 
-    		ownerSecondPassword = #{ownerSecondPassword}
-    	where 
-    		ownerID = #{ownerID}
-    </update>
-  
-  <select id="loginOwnerTwoFactor" parameterType="map" resultType="com.surepark.cmu.domains.OwnerModel">
-		select
-			ownerID,
-			ownerName,
-			ownerPassword,
-			ownerEmail,
-			ownerPhoneNumber,
-			ownerSecondPassword
-		from
-			owner
-		where
-			ownerID = #{ownerID} and ownerSecondPassword = #{ownerSecondPwd}
-	</select> 
+		ownerID = #{ownerID} and ownerPassword = #{ownerPassword}
+	</select>
 
+	<select id="findOwner" resultType="com.surepark.cmu.domains.OwnerModel">
+		select
+		ownerID,
+		ownerName,
+		ownerPassword,
+		ownerEmail,
+		ownerPhoneNumber,
+		ownerSecondPassword
+		from
+		owner
+		where
+		ownerID = #{ownerID}
+	</select>
+
+	<update id="updateOwnerSecondPwd" parameterType="map">
+		update owner
+		set
+		ownerSecondPassword = #{ownerSecondPassword}
+		where
+		ownerID = #{ownerID}
+	</update>
+
+	<select id="loginOwnerTwoFactor" parameterType="map"
+		resultType="com.surepark.cmu.domains.OwnerModel">
+		select
+		ownerID,
+		ownerName,
+		ownerPassword,
+		ownerEmail,
+		ownerPhoneNumber,
+		ownerSecondPassword
+		from
+		owner
+		where
+		ownerID = #{ownerID} and ownerSecondPassword = #{ownerSecondPwd}
+	</select>
+
+	<select id="getOwnerAccountAvailable" parameterType="String" resultType="com.surepark.cmu.domains.OwnerModel">
+		select 
+			owner1stLoginTry,
+			owner2ndLoginTry,
+			ownerAccountAvailable
+		from
+			owner
+		where
+			ownerId = #{ownerId}
+	</select>
+	<update id="updateOwnerAvailable" parameterType="map" >
+		update owner
+		set
+			owner1stLoginTry = #{owner1stLoginTry},
+			owner2ndLoginTry = #{owner2ndLoginTry},
+			ownerAccountAvailable = #{ownerAccountAvailable}
+		where
+			ownerId = #{ownerID}
+	</update>
 
 </mapper>

@@ -63,4 +63,21 @@ public class OwnerFacade implements OwnerInterface {
 		return owner;
 	}
 
+	@Override
+	public OwnerModel getOwnerAvailable(String ownerID) throws DataAccessException {	
+		return sqlSession.selectOne("OwnerFacade.getOwnerAccountAvailable",ownerID);
+	}
+
+	@Override
+	public void updateOwnerAvailable(String ownerID, String owner1stLoginTry, String owner2ndLoginTry, String ownerAccountAvailable) throws DataAccessException {
+		HashMap<String,String> map = new HashMap<String,String>();
+		map.put("ownerID", ownerID);
+		map.put("owner1stLoginTry", owner1stLoginTry);
+		map.put("owner2ndLoginTry", owner2ndLoginTry);
+		map.put("ownerAccountAvailable", ownerAccountAvailable);
+		
+		sqlSession.update("OwnerFacade.updateOwnerAvailable",map);
+	}
+
+	
 }
