@@ -11,13 +11,12 @@
 			ownerPassword,
 			ownerEmail,
 			ownerPhoneNumber,
-			ownerTwofactorPassword
+			ownerSecondPassword
 		from
 			owner
 		where
 			ownerID = #{ownerID} and ownerPassword = #{ownerPassword}
 	</select> 
-	
 	
 	
 	<select id="findOwner"  resultType="com.surepark.cmu.domains.OwnerModel">
@@ -27,17 +26,17 @@
 			ownerPassword,
 			ownerEmail,
 			ownerPhoneNumber,
-			ownerTwofactorPassword
+			ownerSecondPassword
 		from
 			owner
 		where
 			ownerID = #{ownerID}
 	</select> 
   
-  <update id="updateOwnerTwofactor" parameterType="map" >
+  <update id="updateOwnerSecondPwd" parameterType="map" >
     	update owner 
     	set 
-    		ownerTwofactorPassword = #{ownerTwofactorPassword}
+    		ownerSecondPassword = #{ownerSecondPassword}
     	where 
     		ownerID = #{ownerID}
     </update>
@@ -49,11 +48,11 @@
 			ownerPassword,
 			ownerEmail,
 			ownerPhoneNumber,
-			ownerTwofactorPassword
+			ownerSecondPassword
 		from
 			owner
 		where
-			ownerID = #{ownerID} and ownerTwofactorPassword = #{ownerTwofactorPassword}
+			ownerID = #{ownerID} and ownerSecondPassword = #{ownerSecondPwd}
 	</select> 
 
 

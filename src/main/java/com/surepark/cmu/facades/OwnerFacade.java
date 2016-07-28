@@ -48,9 +48,9 @@ public class OwnerFacade implements OwnerInterface {
 		// TODO Auto-generated method stub
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("ownerID", ownerID);
-		map.put("ownerTwofactorPassword", ownerSecondPwd);
+		map.put("ownerSecondPassword", ownerSecondPwd);
 
-		int result = sqlSession.update("OwnerFacade.updateOwnerTwofactor", map);
+		int result = sqlSession.update("OwnerFacade.updateOwnerSecondPwd", map);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class OwnerFacade implements OwnerInterface {
 		// TODO Auto-generated method stub
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("ownerID", ownerID);
-		map.put("ownerTwofactorPassword", ownerSecondPwd);
+		map.put("ownerSecondPwd", ownerSecondPwd);
 		OwnerModel owner = sqlSession.selectOne("OwnerFacade.loginOwnerTwoFactor", map);
 		return owner;
 	}

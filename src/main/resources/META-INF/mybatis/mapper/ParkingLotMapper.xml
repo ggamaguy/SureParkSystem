@@ -4,18 +4,19 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ParkingLotFacade">
  	<update id="updateParkingLot" parameterType="com.surepark.cmu.domains.ParkingLotModel">
- 		update parkinglot
+ 		update 
+ 			parkinglot
  		set
- 			parkingLotID = #{parkingLotID}
-			parkingLotName = #{parkingLotName}
-			parkingLotLocationLongitude = #{parkingLotLocationLongitude}
-			parkingLotLocationLatitude = #{parkingLotLocationLatitude}
-			parkingLotAdress = #{parkingLotAdress}
-			parkingLotStartTime = #{parkingLotStartTime}
-			parkingLotEndTime = #{parkingLotEndTime}
-			parkingLotMaximumCapacity = #{parkingLotMaximumCapacity}
-			ownerID = #{ownerID}
-			parkingLotGracePeriod = #{parkingLotGracePeriod}
+ 			parkingLotID = #{parkingLotID},
+			parkingLotName = #{parkingLotName},
+			parkingLotLocationLongitude = #{parkingLotLocationLongitude},
+			parkingLotLocationLatitude = #{parkingLotLocationLatitude},
+			parkingLotAdress = #{parkingLotAdress},
+			parkingLotStartTime = #{parkingLotStartTime},
+			parkingLotEndTime = #{parkingLotEndTime},
+			parkingLotMaximumCapacity = #{parkingLotMaximumCapacity},
+			ownerID = #{ownerID},
+			parkingLotGracePeriod = #{parkingLotGracePeriod},
 			parkingLotPreResvationPeriod = #{parkingLotPreResvationPeriod}
 		where
 			parkingLotID = #{parkingLotID}
