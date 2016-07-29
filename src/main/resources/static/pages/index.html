@@ -23,7 +23,7 @@
     <link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 </head>
 
-<body>
+<body onload="ownerMain();">
     <div id="wrapper">
 
         <!-- Navigation -->
@@ -45,12 +45,12 @@
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        <li><a href="index.html"><i class="fa fa-user fa-fw"></i> User Profile</a>
                         </li>
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><a onclick="ownerLogout();"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -100,18 +100,16 @@
                 <div class="col-lg-8">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <i class="fa fa-th-list fa-fw"></i> Parking Lot Lists
+                            <i class="fa fa-th-list fa-fw"></i> Owner Information
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <div class="list-group">
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-square-o fa-fw"></i> Cheony Parking Space
-                                </a>
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-square-o fa-fw"></i> Primium Parking Lot
-                                </a>
-                            </div>
+                          <ul id="page">
+                            <label>● ID</label> <p id="oid"></p>
+                            <label>● Name</label> <p id="oname"></p>
+                            <label>● E-mail</label> <p id="oemail"></p>
+                            <label>● Cell Phone Number</label> <p id="ophone"></p>
+                          </ul>
                         </div>
                     </div>
                 </div>
@@ -139,6 +137,10 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="../dist/js/sb-admin-2.js"></script>
+
+    <!-- ajax by Woori -->
+    <script src="../js/index.js"></script>
+    <script src="../js/logout.js"></script>
 
 </body>
 

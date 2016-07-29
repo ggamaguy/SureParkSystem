@@ -1,20 +1,26 @@
 
 var ownerMain = function(){
 
-   var ownerID = getCookie(ownerID);
+   var ownerID = getCookie("ownerID");
 
    $.ajax({
-      url: '/surepark-restful/owners/'+ownerID,
+      url: '/surepark-restful/owner/'+ownerID,
       type: 'GET',
       contentType: 'application/json',
       accept: 'application/json',
       success: function (data)
       {
-         console.log(JSON.stringify(data));
-         $('#oid').val(data.ownerID);
-         $('#oname').val(data.ownerName);
-         $('#oemail').val(data.ownerEmail);
-         $('#ophone').val(data.ownerPhoneNumber);
+    	// server's result
+     	 var temp = JSON.stringify(data);
+     	 var result = JSON.parse(temp);
+     	 var re = JSON.parse(result);
+     	 
+         console.log(re);
+         
+         $("#oid").append(re.ownerID);
+         $("#oname").append(re.ownerName);
+         $("#oemail").append(re.ownerEmail);
+         $("#ophone").append(re.ownerPhoneNumber);
       },
       error: function (data)
       {

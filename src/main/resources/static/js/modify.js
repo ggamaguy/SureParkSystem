@@ -1,27 +1,50 @@
 // onload로 할거
+
+var parkingArr = [];
+
 var modifyParkinglot = function(){
 
-   var ownerID = getCookie(ownerID);
-   var parkinglotID = getCookie(parkinglotID);
+   var ownerID = getCookie("ownerID");
+   var parkinglotID = getCookie("parkinglotID");
 
    $.ajax({
-      url: '/surepark-restful/owners/'+ownerID+'/parkinglots/'+parkinglotID,
+      url: '/surepark-restful/owner/'+ownerID+'/parkinglots',
       type: 'GET',
       contentType: 'application/json',
       accept: 'application/json',
       success: function (data)
       {
-         console.log(JSON.stringify(data));
-         $('#ptitle').val("<h4>"+data.parkingLotName+"</h4>");
-         $('#pid').val(data.parkingLotID);
-         $('#pname').val("<input type='text' id='inputname' style='padding-left: 10px;' placeholder='"+data.parkingLotName+"'>");
-         $('#pmap').val(data.parkingLotLocation);
-         $('#paddress').val(data.parkingLotAdress);
-         $('#popen').val("<input type='date' id='inputopen' style='padding-left: 10px;' placeholder='"+data.parkingLotStartTime+"'>");
-         $('#pclose').val("<input type='date' id='inputclose' style='padding-left: 10px;' placeholder='"+data.parkingLotEndTime+"'>");
-         $('#pspots').val(data.parkingLotMaximumCapacity);
-         $('#pgrace').val("<input type='date' id='inputgrace' style='padding-left: 10px;' placeholder='"+data.parkingLotGracePeriod+"'>");
-         $('#ppre').val("<input type='date' id='inputpre' style='padding-left: 10px;' placeholder='"+data.parkingLotPreResvationPeriod+"'>");
+    	// server's result
+       	 var temp = JSON.stringify(data);
+       	 var result = JSON.parse(temp);
+       	 var res = JSON.parse(result);
+       	 
+          //console.log(res.parkinglot[0]);
+          var index;
+          
+          for(var i=0; i<res.count; i++) {
+        	  parkingArr[i] = res.parkinglot[i];
+        	  console.log(parkingArr[i]);
+         	 if (res.parkinglot[i].parkingLotID == parkinglotID) {
+         		 index = i;
+         	 }
+          }
+          
+          var re = res.parkinglot[index];
+
+     	 //console.log(re);
+
+          $('#ptitle').empty().append("<h4>"+re.parkingLotName+"</h4>");
+          $('#pid').empty().append(re.parkingLotID);
+          $('#pname').empty().append("<input type='text' id='inputname' style='padding-left: 10px;' placeholder='"+re.parkingLotName+"'>");
+          $('#pmap').empty().append("("+re.parkingLotLocationLatitude+","+re.parkingLotLocationLongitude+")");
+          $('#paddress').empty().append(re.parkingLotAdress);
+          $('#popen').empty().append("<input type='text' id='inputopen' style='padding-left: 10px;' placeholder='"+re.parkingLotStartTime+"'>");
+          $('#pclose').empty().append("<input type='text' id='inputclose' style='padding-left: 10px;' placeholder='"+re.parkingLotEndTime+"'>");
+          $('#pspots').empty().append(re.parkingLotMaximumCapacity);
+          $('#pgrace').empty().append("<input type='integer' id='inputgrace' style='padding-left: 10px;' placeholder='"+re.parkingLotGracePeriod+"'>");
+          $('#ppre').empty().append("<input type='integer' id='inputpre' style='padding-left: 10px;' placeholder='"+re.parkingLotPreResvationPeriod+"'>");
+ 
       },
       error: function (data)
       {
@@ -31,36 +54,70 @@ var modifyParkinglot = function(){
 
 }
 
-// put!!!!! 제대로 안해놨음!!!!!! data 어떻게 보내는지 그런 거 신경 안썼음!!!
+
 var updateParking = function(){
 
-   var ownerID = getCookie(ownerID);
-   var parkinglotID = getCookie(parkinglotID);
+   var ownerID = getCookie("ownerID");
+   var parkinglotID = getCookie("parkinglotID");
+   var index;
+   for(var i=0; i<parkingArr.length; i++) {
+  	 if (parkingArr[i].parkingLotID == parkinglotID) {
+  		 index = i;
+  	   console.log(parkingArr[index]);
+  	   
+  	 }
+   }
 
-   var ownerLoginJson = JSON.stringify({
-            ownerID: ownerID,
-            ownerPassword: password,
+   var parkingLotName = $("#inputname").val();
+   var parkingLotStartTime = $("#inputopen").val();
+   var parkingLotEndTime = $("#inputclose").val();
+   var parkingLotGracePeriod = $("#inputgrace").val();
+   var parkingLotPreResvationPeriod = $("#inputpre").val();
+   
+   if (parkingLotName == undefined || parkingLotName == '') {
+	   parkingLotName = parkingArr[index].parkingLotName;
+   }
+   if ( parkingLotStartTime == undefined || parkingLotStartTime == '') {
+	   parkingLotStartTime = parkingArr[index].parkingLotStartTime;
+   }
+   if (parkingLotEndTime == undefined || parkingLotEndTime == '') {
+	   parkingLotEndTime = parkingArr[index].parkingLotEndTime;
+   }
+   if ( parkingLotGracePeriod == undefined || parkingLotGracePeriod == '') {
+	   parkingLotGracePeriod = parkingArr[index].parkingLotGracePeriod;
+	   console.log(parkingArr[index].parkingLotGracePeriod);
+   }
+   if (parkingLotPreResvationPeriod == undefined || parkingLotPreResvationPeriod == '') {
+	   parkingLotPreResvationPeriod = parkingArr[index].parkingLotPreResvationPeriod;
+   }
+   
+
+   
+   var updateParkinglot = JSON.stringify({
+	   		parkingLotID: parkingArr[index].parkingLotID,
+            parkingLotName: parkingLotName,
+            parkingLotStartTime: parkingLotStartTime,
+            parkingLotEndTime: parkingLotEndTime,
+            parkingLotGracePeriod: parkingLotGracePeriod,
+            parkingLotPreResvationPeriod: parkingLotPreResvationPeriod,
+            parkingLotLocationLongitude: parkingArr[index].parkingLotLocationLongitude,
+            parkingLotLocationLatitude: parkingArr[index].parkingLotLocationLatitude,
+            parkingLotAdress: parkingArr[index].parkingLotAdress,
+            parkingLotMaximumCapacity: parkingArr[index].parkingLotMaximumCapacity,
+            ownerID: parkingArr[index].ownerID,
           });
 
    $.ajax({
-      url: '/surepark-restful/owners/'+ownerID+'/parkinglots/'+parkinglotID,
+      url: '/surepark-restful/owner/'+ownerID+'/parkinglots/'+parkinglotID,
       type: 'PUT',
       contentType: 'application/json',
       accept: 'application/json',
       dataType: 'json',
-      data: ownerLoginJson,
+      data: updateParkinglot,
       success: function (data)
       {
          console.log(JSON.stringify(data));
-         $('#pid').val(data.parkingLotID);
-         $('#pname').val(data.parkingLotName);
-         $('#pmap').val(data.parkingLotLocation);
-         $('#paddress').val(data.parkingLotAdress);
-         $('#popen').val(data.parkingLotStartTime);
-         $('#pclose').val(data.parkingLotEndTime);
-         $('#pspots').val(data.parkingLotMaximumCapacity);
-         $('#pgrace').val(data.parkingLotGracePeriod);
-         $('#ppre').val(data.parkingLotPreResvationPeriod);
+         window.location = "settings.html";
       },
       error: function (data)
       {

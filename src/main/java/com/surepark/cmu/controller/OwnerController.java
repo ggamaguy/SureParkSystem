@@ -67,6 +67,7 @@ public class OwnerController extends HttpServlet {
 		OwnerModel owner = null;
 		HttpSession session = request.getSession();
 		HashMap<String,String> loginState = new HashMap<String,String>();
+		System.out.println(jsonO.toJSONString());
 		if(session.getAttribute("loginState") != null){
 			loginState = ((HashMap<String,String>)session.getAttribute("loginState"));
 		}
@@ -112,7 +113,7 @@ public class OwnerController extends HttpServlet {
 						jsonroot.put("result", "fail");
 						loginState.put("Success1stLogIn", "false");
 					}
-					jsonroot.put("result", "sucess");
+					jsonroot.put("result", "success");
 					loginState.put("Success1stLogIn", "true");
 					session.setAttribute("loginState", loginState);
 				}
@@ -144,6 +145,7 @@ public class OwnerController extends HttpServlet {
 			jsonroot.put("result", "fail");
 			return jsonroot.toJSONString();
 		}
+		System.out.println(loginState.get("Success1stLogIn"));
 		if (loginState.get("Success1stLogIn").equalsIgnoreCase("true")) {
 			System.out.println("3");
 			try {
@@ -157,7 +159,17 @@ public class OwnerController extends HttpServlet {
 					if (owner == null){
 					System.out.println("5");
 						jsonroot.put("result", "fail");
-						ownerFacade.updateOwnerSecondPassword(ownerID, "");
+						String generateOwnerSecondPassword = RandomStringUtils.randomAlphanumeric(6).toLowerCase();
+						ownerFacade.updateOwnerSecondPassword(ownerID, generateOwnerSecondPassword);
+
+						/*
+						 * try { sendMail(owner.getOwnerName(),
+						 * owner.getOwnerEmail(), "Two Factor Password : "
+						 * +ownerTwofactorPassword); } catch
+						 * (UnsupportedEncodingException | MessagingException e)
+						 * { // TODO Auto-generated catch block
+						 * e.printStackTrace(); }
+						 */
 						loginState.put("Success1stLogin", "true");
 						loginState.put("Success2ndLogin", "false");
 						OwnerModel tryModel = ownerFacade.getOwnerAvailable(ownerID);
@@ -173,7 +185,7 @@ public class OwnerController extends HttpServlet {
 						OwnerModel tryModel = ownerFacade.getOwnerAvailable(ownerID);
 						tryModel.setOwner2ndLoginTry("0");
 						ownerFacade.updateOwnerAvailable(ownerID, tryModel.getOwner1stLoginTry(), tryModel.getOwner2ndLoginTry(), tryModel.getOwnerAccountAvailable());
-						jsonroot.put("result", "sucess");
+						jsonroot.put("result", "success");
 						ownerFacade.updateOwnerSecondPassword(ownerID, "");
 						loginState.put("Success1stLogin", "true");
 						loginState.put("Success2ndLogin", "true");
@@ -271,8 +283,8 @@ public class OwnerController extends HttpServlet {
 					JSONObject temp = new JSONObject();
 					temp.put("parkingLotID", model.getParkingLotID());
 					temp.put("parkingLotName", model.getParkingLotName());
-					temp.put("ParkingLotLocationLatitude", model.getParkingLotLocationLatitude());
-					temp.put("ParkingLotLocationLongitude", model.getParkingLotLocationLongitude());
+					temp.put("parkingLotLocationLatitude", model.getParkingLotLocationLatitude());
+					temp.put("parkingLotLocationLongitude", model.getParkingLotLocationLongitude());
 					temp.put("parkingLotAdress", model.getParkingLotAdress());
 					temp.put("parkingLotStartTime", model.getParkingLotStartTime());
 					temp.put("parkingLotEndTime", model.getParkingLotEndTime());
@@ -310,12 +322,12 @@ public class OwnerController extends HttpServlet {
 			result.put("result", "fail");
 			return result.toJSONString();
 		}
-		System.out.println(loginState.containsKey("Success1stLogin"));
-		System.out.println(loginState.containsKey("Success2ndLogin")); 
-		System.out.println(loginState.containsKey("ownerId"));
-		System.out.println(loginState.get("Success1stLogin").equalsIgnoreCase("true"));
-		System.out.println(loginState.get("Success2ndLogin").equalsIgnoreCase("true")); 
-		System.out.println(loginState.get("ownerId").equalsIgnoreCase(ownerId));		
+		System.out.println("Success1stLogin: "+loginState.containsKey("Success1stLogin"));
+		System.out.println("Success2ndLogin: "+loginState.containsKey("Success2ndLogin")); 
+		System.out.println("ownerId: "+loginState.containsKey("ownerId"));
+		//System.out.println(loginState.get("Success1stLogin").equalsIgnoreCase("true"));
+		//System.out.println(loginState.get("Success2ndLogin").equalsIgnoreCase("true")); 
+		//System.out.println(loginState.get("ownerId").equalsIgnoreCase(ownerId));		
 		for(int i = 0; i < json.keySet().toArray().length;i++){
 			System.out.println(json.keySet().toArray()[i]);
 		}
@@ -327,30 +339,37 @@ public class OwnerController extends HttpServlet {
     			&& loginState.get("Success2ndLogin").equalsIgnoreCase("true")
     			&& loginState.get("ownerId").equalsIgnoreCase(ownerId))){
     		System.out.println("1");
-    		System.out.println(json.containsKey("parkingLotID"));
-    		System.out.println(json.containsKey("parkingLotName"));
-    		System.out.println(json.containsKey("parkingLotLocationLongitude"));
-    		System.out.println(json.containsKey("parkingLotLocationLatitude"));
-    		System.out.println(json.containsKey("parkingLotAdress"));
-    		System.out.println(json.containsKey("parkingLotMaximumCapacity"));
-    		System.out.println(json.containsKey("ownerID"));
-    		System.out.println(json.containsKey("parkingLotGracePeriod"));
-    		System.out.println(json.containsKey("parkingLotPreResvationPeriod"));
-    		System.out.println(json.containsKey("parkingLotName"));
-    		System.out.println(json.containsKey("parkingLotStartTime"));
-    		System.out.println(json.containsKey("parkingLotEndTime"));
+    		System.out.println("2"+json.get("parkingLotID"));
+    		System.out.println("3"+json.get("parkingLotName"));
+    		System.out.println("4"+json.get("parkingLotLocationLongitude"));
+    		System.out.println("5"+json.get("parkingLotLocationLatitude"));
+    		System.out.println("6"+json.get("parkingLotAdress"));
+    		System.out.println("7"+json.get("parkingLotMaximumCapacity"));
+    		System.out.println("8"+json.get("ownerID"));
+    		System.out.println("9"+json.get("parkingLotGracePeriod"));
+    		System.out.println("10"+json.get("parkingLotPreResvationPeriod"));
+    		System.out.println("11"+json.get("parkingLotName"));
+    		System.out.println("12"+json.get("parkingLotStartTime"));
+    		System.out.println("13"+json.get("parkingLotEndTime"));
     		try{
-    			if(json.containsKey("parkingLotID") && json.containsKey("parkingLotName") 
-    					&& json.containsKey("parkingLotLocationLongitude") && json.containsKey("parkingLotLocationLatitude") && json.containsKey("parkingLotAdress") 
-    					&& json.containsKey("parkingLotStartTime") && json.containsKey("parkingLotEndTime") 
-    					&& json.containsKey("parkingLotMaximumCapacity") && json.containsKey("ownerID") 
-    					&& json.containsKey("parkingLotGracePeriod") && json.containsKey("parkingLotPreResvationPeriod")){
+    			if(json.containsKey("parkingLotID") 
+    					&& json.containsKey("parkingLotName") 
+    					&& json.containsKey("parkingLotLocationLongitude") 
+    					&& json.containsKey("parkingLotLocationLatitude") 
+    					&& json.containsKey("parkingLotAdress") 
+    					&& json.containsKey("parkingLotStartTime") 
+    					&& json.containsKey("parkingLotEndTime") 
+    					&& json.containsKey("parkingLotMaximumCapacity") 
+    					&& json.containsKey("ownerID") 
+    					&& json.containsKey("parkingLotGracePeriod") 
+    					&& json.containsKey("parkingLotPreResvationPeriod")){
     				System.out.println("2");
     				parkingLot.setParkingLotID(json.get("parkingLotID").toString());
     				parkingLot.setParkingLotName(json.get("parkingLotName").toString());
     				parkingLot.setParkingLotLocationLongitude(json.get("parkingLotLocationLongitude").toString());
     				parkingLot.setParkingLotLocationLatitude(json.get("parkingLotLocationLatitude").toString());
     				parkingLot.setParkingLotAdress(json.get("parkingLotAdress").toString());
+    				System.out.println(json.get("parkingLotStartTime").toString());
     				parkingLot.setParkingLotStartTime(json.get("parkingLotStartTime").toString());
     				parkingLot.setParkingLotEndTime(json.get("parkingLotEndTime").toString());
     				parkingLot.setParkingLotMaximumCapacity(json.get("parkingLotMaximumCapacity").toString());
@@ -359,6 +378,10 @@ public class OwnerController extends HttpServlet {
     				parkingLot.setParkingLotPreResvationPeriod(json.get("parkingLotPreResvationPeriod").toString());
     				parkingLotFacade.updateParkingLot(parkingLot);
     				result.put("result", "success");
+    			}else{
+    				System.out.println("3");
+    				result.put("result", "fail");
+        			return result.toJSONString();
     			}
     		}catch(Exception e){
     			e.printStackTrace();
@@ -371,6 +394,11 @@ public class OwnerController extends HttpServlet {
     	return result.toJSONString();
 	}
 
+	@RequestMapping(value="/owner/logout")
+	public void logoutOwner(HttpServletRequest request){
+		request.getSession().invalidate();
+	}
+	
 	private void sendMail(String ownerName, String ownerEmail, String Text) throws UnsupportedEncodingException, MessagingException
     {
     	JavaMailSenderImpl mailSender = new JavaMailSenderImpl();

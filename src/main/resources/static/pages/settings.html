@@ -23,7 +23,7 @@
     <link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 </head>
 
-<body>
+<body onload="ownerParkinglot();">
     <div id="wrapper">
 
         <!-- Navigation -->
@@ -50,7 +50,7 @@
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><a onclick="ownerLogout();"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -101,19 +101,15 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <i class="fa fa-th-list fa-fw"></i> Parking Lot Lists
-                            <button type="button" class="btn btn-default" style="float: right; padding: 3px;">Modify</button>
+                            <a type="button" href="modify.html" class="btn btn-default" style="float: right; padding: 3px;">Modify</a>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                           <div class="row">
                             <div class="col-lg-8">
-                              <div class="form-group">
-                                <select class="form-control" onchange="report(this)">
+                              <div class="form-group" onload="ownerParkinglot();">
+                                <select class="form-control" id="list" onchange="parkinglotinfo(this);">
                                   <option>Please Select.</option>
-                                  <option>Cheony Parking Space</option>
-                                  <option>3</option>
-                                  <option>4</option>
-                                  <option>5</option>
                                 </select>
                               </div>
                             </div>
@@ -122,15 +118,18 @@
                           <div class="row">
                             <div class="col-lg-8">
                               <ul id="page">
+                                <label>● Parking Lot ID</label> <p id="pid"><br/></p>
                                 <label>● Name</label> <p id="pname"><br/></p>
                                 <label>● Map</label> <p id="pmap"><br/></p>
-                                <label>● Location</label> <p id="plocation"><br/></p>
+                                <label>● Address</label> <p id="paddress"><br/></p>
+                                <label>● Open Time</label> <p id="popen"><br/></p>
+                                <label>● Close Time</label> <p id="pclose"><br/></p>
                                 <label>● The Number of Spots</label> <p id="pspots"><br/></p>
-                                <label>● The Number of Attendants</label> <p id="pattendants"><br/></p>
+                                <label>● Grace Period</label> <p id="pgrace"><br/></p>
+                                <label>● Pre-Reservation Period</label> <p id="ppre"><br/></p>
                               </ul>
                             </div>
                           </div>
-
                         </div>
                     </div>
                 </div>
@@ -159,7 +158,11 @@
     <!-- Custom Theme JavaScript -->
     <script src="../dist/js/sb-admin-2.js"></script>
 
-    <!-- 노리가 짠 js -->
+    <!-- ajax by Woori -->
+    <script src="../js/settings.js"></script>
+    <script src="../js/logout.js"></script>
+
+    <!-- 노리가 짠 js
     <script type="text/javascript">
       function report(select) {
         // var temp = document.getElementById("pname").innerHTML;
@@ -180,7 +183,7 @@
         }
 
       }
-    </script>
+    </script>-->
 
 </body>
 

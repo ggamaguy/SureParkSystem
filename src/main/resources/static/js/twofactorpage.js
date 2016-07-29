@@ -1,16 +1,17 @@
 
 var ownerTwofactor = function(){
 
-   var ownerID = "ckanstnzja";
-   var ownerTwofactorPassword = "12345";
+   var ownerID = getCookie("ownerID");
+   var ownerSecondPassword = $("#key").val();
    var ownerTwofactorJson = JSON.stringify({
             ownerID: ownerID,
-            ownerTwofactorPassword: ownerTwofactorPassword,
+            ownerSecondPassword: ownerSecondPassword,
           });
-
-
+   
+   //window.alert(ownerID+"/"+ownerSecondPassword);
+   
    $.ajax({
-      url: '/surepark-restful/owners/login/twofactor',
+      url: '/surepark-restful/owner/login/second',
       type: 'POST',
       contentType: 'application/json',
       accept: 'application/json',
@@ -18,9 +19,23 @@ var ownerTwofactor = function(){
       data: ownerTwofactorJson,
       success: function (data)
       {
-         console.log(JSON.stringify(data));
-         // change cookie
-         document.cookie="accessToken="+data.accessToken;
+    	// server's result
+     	 var temp = JSON.stringify(data);
+     	 var result = JSON.parse(temp);
+     	 
+     	 console.log(JSON.stringify(data));
+     	 
+     	if (result.result == "fail") {
+       	 window.alert("Wrong Passwords!");
+        } else if (result.result == "success") {
+        	// change cookie
+            document.cookie="accessToken="+data.accessToken;
+            window.location = "index.html";
+        } else if (result.result == "unavailable") {
+       	 window.alert("You failed log-in 3 times.\n" +
+       	 		"Please contact maintenance.\n" +
+       	 		"☏123-1234-1234");
+        }
       },
       error: function (data)
       {
@@ -28,4 +43,19 @@ var ownerTwofactor = function(){
       },
    });
 
+}
+
+function getCookie(val) {
+  var name = val+"=";
+  var temp = document.cookie.split(';');
+  for (var i = 0; i < temp.length; i++) {
+    var c = temp[i];
+    while (c.charAt(0)==' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length,c.length);
+    }
+  }
+  return "";
 }

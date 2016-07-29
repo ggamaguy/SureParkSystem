@@ -23,7 +23,7 @@
     <link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 </head>
 
-<body>
+<body onload="modifyParkinglot();">
     <div id="wrapper">
 
         <!-- Navigation -->
@@ -104,12 +104,12 @@
 
                         <div class="panel-heading">
                             <i class="fa fa-th-list fa-fw"></i> Parking Lot Lists
-                            <button type="submit" form="form1" class="btn btn-default" style="float: right; padding: 3px;">Complete</button>
+                            <a onclick="updateParking();" type="button" class="btn btn-default" style="float: right; padding: 3px;">Complete</a>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                           <div class="row">
-                            <div class="col-lg-8">
+                            <div class="col-lg-8" id="ptitle">
                               <h4>Cheony Parking Space</h4>
                             </div>
                           </div>
@@ -117,11 +117,15 @@
                           <div class="row">
                             <div class="col-lg-8">
                               <ul id="page">
-                                <label>● Name</label> <p id="pname"><input type="text" name="name" style="padding-left: 10px;" placeholder="Cheony Parking Lot"></p>
-                                <label>● Map</label> <p id="pmap"><img src="#"></p>
-                                <label>● Location</label> <p id="plocation"><input type="text" name="location" style="padding-left: 10px;" placeholder="Blah blah"></p>
-                                <label>● The Number of Spots</label> <p id="pspots"><input type="number" name="spots" style="width: 70px; padding-left: 10px;" placeholder="3"></p>
-                                <label>● The Number of Attendants</label> <p id="pattendants"><input type="number" name="attendants" style="width: 70px; padding-left: 10px;" placeholder="2"></p>
+                                <label>● Parking Lot ID</label> <p id="pid"></p>
+                                <label>● Name</label> <p id="pname"><input type="text" id="inputname" style="padding-left: 10px;"></p>
+                                <label>● Map</label> <p id="pmap"></p>
+                                <label>● Address</label> <p id="paddress"></p>
+                                <label>● Open Time</label> <p id="popen"><input type="text" id="inputopen" style="padding-left: 10px;"></p>
+                                <label>● Close Time</label> <p id="pclose"><input type="text" id="inputclose" style="padding-left: 10px;"></p>
+                                <label>● The Number of Spots</label> <p id="pspots"></p>
+                                <label>● Grace Period</label> <p id="pgrace"><input type="text" id="inputgrace" style="padding-left: 10px;"></p>
+                                <label>● Pre-Reservation Period</label> <p id="ppre"><input type="text" id="inputpre" style="padding-left: 10px;"></p>
                               </ul>
                             </div>
                           </div>
@@ -157,19 +161,8 @@
     <!-- Custom Theme JavaScript -->
     <script src="../dist/js/sb-admin-2.js"></script>
 
-    <!-- 노리가 짠 js -->
-    <script type="text/javascript">
-      function report(select) {
-        // var temp = document.getElementById("pname").innerHTML;
-        alert(select.selectedIndex);
-        document.getElementById("pname").innerHTML = select.options[select.selectedIndex].innerHTML;
-        document.getElementById("pmap").innerHTML = "<img src='#'>";
-        document.getElementById("plocation").innerHTML = "Pittsburg 12345";
-        document.getElementById("pspots").innerHTML = "5";
-        document.getElementById("pattendants").innerHTML = "7";
-
-      }
-    </script>
+    <!-- ajax by Woori -->
+    <script src="../js/modify.js"></script>
 
 </body>
 
