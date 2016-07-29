@@ -22,8 +22,8 @@ public class ParkingLotFacade implements ParkingLotInterface{
 	}
 
 	@Override
-	public void deleteParkingLot(String parkingLotId) throws DataAccessException {
-		sqlSession.delete("ParkingLotFacade.updateParkingLot",parkingLotId);
+	public void deleteParkingLot(String parkingLotID) throws DataAccessException {
+		sqlSession.delete("ParkingLotFacade.updateParkingLot",parkingLotID);
 	}
 
 	@Override
@@ -37,8 +37,8 @@ public class ParkingLotFacade implements ParkingLotInterface{
 	}
 
 	@Override
-	public ParkingLotModel selectParkingLotByParkingLotId(String parkingLotId) throws DataAccessException {
-		return sqlSession.selectOne("ParkingLotFacade.selectParkingLotByParkingLotId", parkingLotId);
+	public ParkingLotModel selectParkingLotByParkingLotId(String parkingLotID) throws DataAccessException {
+		return sqlSession.selectOne("ParkingLotFacade.selectParkingLotByParkingLotId", parkingLotID);
 	}
 
 	@Override
@@ -47,9 +47,10 @@ public class ParkingLotFacade implements ParkingLotInterface{
 		return sqlSession.selectOne("ParkingLotFacade.selectParkingLotIP", parkingLotID);
 	}
 
+
 	@Override
 	public List<ParkingLotModel> selectParkingLotByOwnerId(String ownerId) throws DataAccessException {
 		return sqlSession.selectList("ParkingLotFacade.selectParkingLotByOwnerId",ownerId);
 	}
-	 	
+
 }

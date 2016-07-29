@@ -38,10 +38,10 @@ public class ReservationFacade implements ReservationInterface{
 	}
 
 	@Override
-	public ReservationModel getResv(String phoneNumber,String reservationId) {
+	public ReservationModel getResv(String phoneNumber,String reservationID) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("phoneNumber", phoneNumber);
-		map.put("reservationId", reservationId);
+		map.put("reservationID", reservationID);
 		return sqlSession.selectOne("ReservationFacade.getReservation", map);
 	}
 

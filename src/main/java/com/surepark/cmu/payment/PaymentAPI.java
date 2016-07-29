@@ -9,7 +9,7 @@ public class PaymentAPI {
 	
 	
 	
-	public boolean payment(CardModel card, int money)
+	public boolean payment(CardModel card, double money)
 	{
 		boolean result = false;
 		

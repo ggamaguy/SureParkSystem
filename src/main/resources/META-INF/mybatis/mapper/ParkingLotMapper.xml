@@ -97,6 +97,7 @@
  			parkingLot
  		where
  			parkingLotID = #{parkingLotID} 
+
  	</select>
  	
  	<select id="selectParkingLotIP" parameterType = "String" resultType = "String">
@@ -107,6 +108,9 @@
  		where
  			parkingLotID = #{parkingLotID}
  	</select>
+ 	
+ 	
+ 	
   
   	<select id="selectParkingLotByOwnerId" resultType="com.surepark.cmu.domains.ParkingLotModel">
   		select

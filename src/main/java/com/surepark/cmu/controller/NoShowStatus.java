@@ -44,8 +44,6 @@ public class NoShowStatus extends HttpServlet {
     public String deliveredNoshowStatus(@PathVariable(value="phoneNumber") String phoneNumber){
     	JSONObject result = new JSONObject();
     	try{
-    		reservationFacade.deleteResvByPhoneNumber(phoneNumber);
-    		cardValidationFacade.deleteCardByPhoneNumber(phoneNumber);
     		driverFacade.deleteDriver(phoneNumber);
     	}catch(Exception e){
     		e.printStackTrace();

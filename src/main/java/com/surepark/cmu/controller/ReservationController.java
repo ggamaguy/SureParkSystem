@@ -84,10 +84,13 @@ public class ReservationController extends HttpServlet {
     		reservationModel.setCarSize(Integer.parseInt(jsonO.get("carSize").toString()));
     		System.out.println(jsonO.get("carSize").toString());
     	}
+    	
+    	
     	if(jsonO.containsKey("reservationTime") && jsonO.get("reservationTime") != null){
     		reservationModel.setReservationTime(Timestamp.valueOf(jsonO.get("reservationTime").toString()));
     		System.out.println(jsonO.get("reservationTime").toString());
     	}
+    	
     	if(jsonO.containsKey("cardNumber") && jsonO.get("cardNumber") != null){
     		reservationModel.setCardNumber(jsonO.get("cardNumber").toString());
     		System.out.println(jsonO.get("cardNumber").toString());
@@ -200,8 +203,6 @@ public class ReservationController extends HttpServlet {
     	root.put("parkingLotID", reservationModel.getParkingLotID());
     	root.put("carSize", reservationModel.getCarSize()+"");
     	root.put("reservationTime", reservationModel.getReservationTime().toString());
-
-    	
     	root.put("type", "1");
     	
     	return root;
@@ -231,14 +232,14 @@ public class ReservationController extends HttpServlet {
             		json.put("entranceTime", "null");
             	}else
             	{
-            		json.put("entranceTime", reservationModel.getEntranceTime());
+            		json.put("entranceTime", reservationModel.getEntranceTime().toString());
             	}
             	if(reservationModel.getExitTime() ==null)
             	{
             		json.put("exitTime", "null");
             	}else
             	{
-            		json.put("exitTime", reservationModel.getExitTime());
+            		json.put("exitTime", reservationModel.getExitTime().toString());
             	}
             	
             	System.out.println(json.toJSONString());
