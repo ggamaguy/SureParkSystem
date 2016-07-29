@@ -232,14 +232,14 @@ public class ReservationController extends HttpServlet {
             		json.put("entranceTime", "null");
             	}else
             	{
-            		json.put("entranceTime", reservationModel.getEntranceTime());
+            		json.put("entranceTime", reservationModel.getEntranceTime().toString());
             	}
             	if(reservationModel.getExitTime() ==null)
             	{
             		json.put("exitTime", "null");
             	}else
             	{
-            		json.put("exitTime", reservationModel.getExitTime());
+            		json.put("exitTime", reservationModel.getExitTime().toString());
             	}
             	
             	System.out.println(json.toJSONString());

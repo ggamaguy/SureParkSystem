@@ -240,10 +240,12 @@ public class OpenGateController extends HttpServlet {
 			driverFacade.updateDriverState(phoneNumber, DriverModel.PAYING);
 			parkingLotStatusFacade.increaseAvaliableParkingSpot(reservationModel.getParkingLotID());
 			result.put("result", "success");
+			result.put("exitTime", exitTime);
 			
 		}else if (recvJsonObject.containsKey("result") && recvJsonObject.get("result").equals("fail"))
 		{
 			result.put("result", "fail");
+			result.put("exitTime", "null");
 		}
     	
     	return result;
